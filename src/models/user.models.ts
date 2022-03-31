@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
+import { boolean } from "zod";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -8,6 +9,7 @@ export interface UserDocument extends mongoose.Document {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  comparePassword(candidatePassword: string): Promise<Boolean>;
 }
 
 const userSchema = new mongoose.Schema(
@@ -45,6 +47,14 @@ userSchema.pre("save", async (next) => {
 
   return next();
 });
+
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
+  const user = this as UserDocument;
+
+  return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
+};
 
 const UserModel = mongoose.model("User", userSchema);
 
