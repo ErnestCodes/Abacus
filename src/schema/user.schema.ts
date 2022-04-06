@@ -1,4 +1,5 @@
-import { object, string } from "zod";
+import { object, string, TypeOf } from "zod";
+import { OmitBy, Split } from "../utils/OmitHelper";
 
 export const createUserSchema = object({
   body: object({
@@ -9,13 +10,18 @@ export const createUserSchema = object({
       "Not a valid email"
     ),
     password: string({
-      required_error: "Name is required",
+      required_error: "Password is required",
     }).min(6, "Password should be 6 chars minimum"),
-    passwordConfirm: string({
+    passwordConfirmation: string({
       required_error: "Password confirm is required",
     }),
-  }).refine((data) => data.password === data.passwordConfirm, {
+  }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
-    path: ["passwordConfirm"],
+    path: ["passwordConfirmation"],
   }),
 });
+
+export type CreateUserInput = OmitBy<
+  TypeOf<typeof createUserSchema>,
+  Split<"body.passwordConfirmation">
+>;
