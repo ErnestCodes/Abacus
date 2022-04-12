@@ -1,9 +1,7 @@
 import {} from "mongoose";
-import UserModel, { UserDocument } from "../models/user.models";
+import UserModel, { UserDocument, UserInput } from "../models/user.models";
 
-export async function createUser(
-  input: Omit<UserDocument, "createdAt" | "updatedAt" | "comparePassword">
-) {
+export async function createUser(input: UserInput) {
   try {
     return await UserModel.create(input);
   } catch (error: any) {
