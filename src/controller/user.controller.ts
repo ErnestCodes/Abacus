@@ -11,7 +11,7 @@ const createUserHandler = async (
   try {
     const user = await createUser(req.body);
 
-    return res.send(omit(user.toJSON(), "password"));
+    return res.send(user);
   } catch (error: any) {
     // 409 means conflict
     logger.error(error);
