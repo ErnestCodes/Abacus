@@ -7,7 +7,7 @@ export interface SessionInput {
   userAgent: string;
 }
 
-export interface SchemaDocument extends SessionInput, mongoose.Document {
+export interface SessionDocument extends SessionInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,6 +31,6 @@ const sessionSchema = new mongoose.Schema(
   }
 );
 
-const SessionModel = mongoose.model("Session", sessionSchema);
+const SessionModel = mongoose.model<SessionDocument>("Session", sessionSchema);
 
 export default SessionModel;
