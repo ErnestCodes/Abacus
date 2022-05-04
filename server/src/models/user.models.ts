@@ -6,7 +6,6 @@ export interface UserInput {
   email: string;
   name: string;
   password: string;
-  storeOwner: boolean;
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {
@@ -29,10 +28,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-    },
-    storeOwner: {
-      type: Boolean,
-      default: false,
     },
   },
   {

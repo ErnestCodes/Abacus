@@ -1,13 +1,10 @@
 import mongoose from "mongoose";
 import { UserDocument } from "./user.models";
 
-export interface SessionInput {
+export interface SessionDocument extends mongoose.Document {
   user: UserDocument["_id"];
   valid: boolean;
   userAgent: string;
-}
-
-export interface SessionDocument extends SessionInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
 }
