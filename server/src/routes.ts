@@ -9,6 +9,22 @@ import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
 import { createUserSessionSchema } from "./schema/session.schema";
 import { createUserSchema } from "./schema/user.schema";
+import multer from "multer";
+import { fileFilter, storage } from "./utils/imageUpload";
+import {
+  createProductHandler,
+  deleteProductHandler,
+  getProductHandler,
+  updateProductHandler,
+} from "./controller/product.controller";
+import {
+  createProductSchema,
+  deleteProductSchema,
+  getProductSchema,
+  updateProductSchema,
+} from "./schema/product.schema";
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 function routes(app: Express) {
   // Performance and healthcheck
@@ -19,18 +35,49 @@ function routes(app: Express) {
   // Create User route
   app.post("/api/users", validateResource(createUserSchema), createUserHandler);
 
-  // Create session
+  // Session
   app.post(
     "/api/sessions",
     validateResource(createUserSessionSchema),
     createUserSessionHandler
   );
 
-  // Get the sessions
   app.get("/api/sessions", requireUser, getUserSessionHandler);
 
-  // Delete session
   app.delete("/api/sessions", requireUser, deleteSessionHandler);
+
+  // Products
+  app.post(
+    "/api/products",
+    [
+      upload.single("image"),
+      requireUser,
+      validateResource(createProductSchema),
+    ],
+    createProductHandler
+  );
+
+  app.put(
+    "/api/products/:productId",
+    [
+      upload.single("image"),
+      requireUser,
+      validateResource(updateProductSchema),
+    ],
+    updateProductHandler
+  );
+
+  app.get(
+    "/api/products/:productId",
+    validateResource(getProductSchema),
+    getProductHandler
+  );
+
+  app.delete(
+    "/api/products/:productId",
+    [requireUser, validateResource(deleteProductSchema)],
+    deleteProductHandler
+  );
 }
 
 export default routes;

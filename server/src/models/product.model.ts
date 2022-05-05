@@ -8,8 +8,9 @@ export interface ProductInput {
   user: UserDocument["_id"];
   title: string;
   description: string;
-  price: number;
-  image: string;
+  price: string;
+  image: object;
+  category: string;
 }
 
 export interface ProductDocument extends ProductInput, mongoose.Document {
@@ -38,10 +39,14 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
     price: {
-      type: Number,
+      type: String,
       required: true,
     },
     image: {
+      type: Object,
+      required: true,
+    },
+    category: {
       type: String,
       required: true,
     },
