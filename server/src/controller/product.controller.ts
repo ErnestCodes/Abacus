@@ -81,7 +81,7 @@ export async function getProductHandler(
   const product = await findProduct({ productId });
 
   if (!product) {
-    return res.sendStatus(403);
+    return res.sendStatus(404);
   }
 
   return res.send(product);
