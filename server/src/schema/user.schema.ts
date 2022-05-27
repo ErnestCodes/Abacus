@@ -9,6 +9,7 @@ export const createUserSchema = object({
     email: string({ required_error: "Email is required" }).email(
       "Not a valid email"
     ),
+    pictures: string().optional(),
     password: string({
       required_error: "Password is required",
     }).min(6, "Password should be 6 chars minimum"),

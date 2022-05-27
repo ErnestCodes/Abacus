@@ -125,6 +125,8 @@ export async function googleOauthHandler(req: Request, res: Response) {
     // create a session
     const session = await createSession(user._id, req.get("user-agent") || "");
 
+    // console.log({ session });
+
     // create an access token
     const accessToken = signJwt(
       {
@@ -152,7 +154,7 @@ export async function googleOauthHandler(req: Request, res: Response) {
     res.cookie("refreshToken", refreshToken, refreshTokenCookieOptions);
 
     // redirect back to client
-    res.redirect(config.get("origin"));
+    res.redirect("http://localhost:3000/dashboard");
   } catch (error: any) {
     log.error(error, "Failed to authorize Google user");
     return res.redirect(`${config.get("origin")}/oauth/error`);
