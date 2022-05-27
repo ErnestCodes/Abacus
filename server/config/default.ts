@@ -1,5 +1,8 @@
+require("dotenv").config();
+
 export default {
   port: 1337,
+  origin: "http://localhost:3000",
   dbUri:
     "mongodb+srv://emmy123:emmy123@devnetwork.r0rje.mongodb.net/AriesDB?retryWrites=true&w=majority",
   saltWorkFactor: 10,
@@ -30,4 +33,7 @@ kqK7h5KP389k00U5AgMBAAE=
   //   accessTokenPublicKey: ``,
   //   refreshTokenPrivateKey: ``,
   //   refreshTokenPublicKey: ``,
+  googleClientId: process.env.GOOGLE_CLIENT_ID as string,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+  googleOauthRedirectUrl: process.env.OAUTH_REDIRECT_URL as string,
 };

@@ -9,6 +9,8 @@ async function connect() {
     logger.info("Database Connected");
   } catch (error) {
     logger.error("Could not connect to db");
+    //  for when unhandled fatal exceptions occur
+    //  that was not handled by the domain
     process.exit(1);
   }
 }
