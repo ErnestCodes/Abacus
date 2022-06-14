@@ -13,6 +13,7 @@ import {
   ShoppingBagIcon,
   XIcon,
 } from "@heroicons/react/outline";
+import { Link } from "react-router-dom";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -166,20 +167,20 @@ function HomePage() {
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
                 <div className="flow-root">
-                  <a
-                    href="#"
+                  <Link
+                    to="login"
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Sign in
-                  </a>
+                  </Link>
                 </div>
                 <div className="flow-root">
-                  <a
-                    href="#"
+                  <Link
+                    to="register"
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Create account
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -187,7 +188,6 @@ function HomePage() {
                 <a href="#" className="-m-2 p-2 flex items-center">
                   <img
                     src="https://tailwindui.com/img/flags/flag-canada.svg"
-                    alt=""
                     className="w-5 h-auto block flex-shrink-0"
                   />
                   <span className="ml-3 block text-base font-medium text-gray-900">
