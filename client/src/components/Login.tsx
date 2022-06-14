@@ -1,6 +1,5 @@
 import React from "react";
-import { LockClosedIcon } from "@heroicons/react/solid";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 
 function Login() {
@@ -18,12 +17,12 @@ function Login() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-200">
             Or{" "}
-            <a
-              href="./register"
+            <Link
+              to="/register"
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               sign up for free
-            </a>
+            </Link>
           </p>
         </div>
 
@@ -86,7 +85,7 @@ function Login() {
 
                 <div className="text-sm">
                   <a
-                    href="#"
+                    href="/"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot your password?
