@@ -6,14 +6,15 @@ import {
 } from "../service/session.service";
 import jwt from "jsonwebtoken";
 import {
-  findAndUpdateUser,
+  findAndUpdateAdminUser,
   getGoogleOauthTokens,
   getGoogleUser,
-  validatePassword,
-} from "../service/user.service";
+  validateAdminPassword,
+} from "../service/admin.service";
 import { signJwt } from "../utils/jwt.utils";
 import config from "config";
 import log from "../utils/logger";
+import AdminModel from "../models/admin.models";
 
 const accessTokenCookieOptions: CookieOptions = {
   maxAge: 900000, // 15m
@@ -29,9 +30,12 @@ const refreshTokenCookieOptions = {
   maxAge: 3.154e10, // 1yr
 };
 
-export async function createUserSessionHandler(req: Request, res: Response) {
+export async function createAdminUserSessionHandler(
+  req: Request,
+  res: Response
+) {
   // Validate d users password
-  const user = await validatePassword(req.body);
+  const user = await validateAdminPassword(req.body);
 
   if (!user) {
     return res.status(401).send("Invalid email or password");
@@ -39,6 +43,12 @@ export async function createUserSessionHandler(req: Request, res: Response) {
   // create a session
   const session = await createSession(user._id, req.get("user-agent") || "");
 
+  const adminData = await AdminModel.findById(user._id);
+
+  if (!adminData) {
+    res.status(400);
+    throw new Error("User not found");
+  }
   // create an access token
   const accessToken = signJwt(
     {
@@ -66,10 +76,10 @@ export async function createUserSessionHandler(req: Request, res: Response) {
   res.cookie("refreshToken", refreshToken, refreshTokenCookieOptions);
 
   // return access and refresh token
-  return res.status(200).send({ accessToken, refreshToken });
+  return res.status(200).send({ accessToken, refreshToken, adminData });
 }
 
-export async function getUserSessionHandler(req: Request, res: Response) {
+export async function getAdminUserSessionHandler(req: Request, res: Response) {
   const userId = res.locals.user._id;
 
   const sessions = await findSessions({ user: userId, valid: true });
@@ -77,7 +87,7 @@ export async function getUserSessionHandler(req: Request, res: Response) {
   return res.send(sessions);
 }
 
-export async function deleteSessionHandler(req: Request, res: Response) {
+export async function deleteAdminSessionHandler(req: Request, res: Response) {
   const sessionId = res.locals.user.session;
 
   await updateSession({ query: { _id: sessionId }, update: { valid: false } });
@@ -108,7 +118,7 @@ export async function googleOauthHandler(req: Request, res: Response) {
 
     // console.log({ googleUser });
     // upsert the user
-    const user = await findAndUpdateUser(
+    const user = await findAndUpdateAdminUser(
       { email: googleUser.email },
       {
         email: googleUser.email,

@@ -286,3 +286,22 @@ export const collections = [
     href: "#",
   },
 ];
+
+export const transactions = [
+  {
+    id: 1,
+    name: "Payment to Molly Sanders",
+    href: "#",
+    amount: "$20,000",
+    currency: "USD",
+    status: "success",
+    date: "July 11, 2020",
+    datetime: "2020-07-11",
+  },
+  // More transactions...
+];
+export const statusStyles: any = {
+  success: "bg-green-100 text-green-800",
+  processing: "bg-yellow-100 text-yellow-800",
+  failed: "bg-gray-100 text-gray-800",
+};
