@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { statusStyles, transactions } from "../../../utils/data";
 import {
@@ -25,7 +25,10 @@ import {
   SearchIcon,
 } from "@heroicons/react/solid";
 import routes from "../../../routes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUser, logout, reset } from "../../../features/auth/authSlice";
+import { AppDispatch } from "../../../app/store";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -59,6 +62,15 @@ function classNames(...classes: string[]) {
 
 export default function HomeAdmin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { user } = useSelector((state: any) => state.auth);
+
+  const onLogout = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
+  };
 
   return (
     <>
@@ -285,7 +297,7 @@ export default function HomeAdmin() {
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                         <span className="sr-only">Open user menu for </span>
-                        Nnaemeka
+                        {user && user.adminData.name}
                       </span>
                       <ChevronDownIcon
                         className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
@@ -331,15 +343,15 @@ export default function HomeAdmin() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <button
+                            onClick={onLogout}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
                             Logout
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>
@@ -369,7 +381,7 @@ export default function HomeAdmin() {
                             alt=""
                           />
                           <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                            Good morning, Nnaemeka
+                            Good morning, {user && user.adminData.name}
                           </h1>
                         </div>
                         <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">

@@ -2,7 +2,7 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import SessionModel, { SessionDocument } from "../models/session.model";
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import { get } from "lodash";
-import { findUser } from "./user.service";
+import { findAdminUser } from "./admin.service";
 import config from "config";
 
 export async function createSession(userId: string, userAgent: string) {
@@ -45,7 +45,7 @@ export async function reIssueAccessToken({
   if (!session || !session.valid) return false;
 
   // find the user
-  const user = await findUser({ _id: session.user });
+  const user = await findAdminUser({ _id: session.user });
 
   if (!user) return false;
 
