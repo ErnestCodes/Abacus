@@ -16,17 +16,12 @@ export async function createProductHandler(
   req: Request<{}, {}, CreateProductInput["body"]>,
   res: Response
 ) {
-  const userId = res.locals.user._id;
   const body = req.body;
-  const image = req.file;
+  // const image = req.file;
   //   console.log(image);
-  if (image == undefined) return res.send("image is not defined");
+  // if (image == undefined) return res.send("image is not defined");
   try {
-    const product = await createProduct({
-      ...body,
-      image,
-      user: userId,
-    });
+    const product = await createProduct(body);
 
     return res.send(product);
   } catch (error: any) {
@@ -61,7 +56,7 @@ export async function updateProductHandler(
     return res.sendStatus(404);
   }
 
-  if (String(product.user) !== userId) {
+  if (String(product.adminUser) !== userId) {
     return res.sendStatus(403);
   }
 
@@ -101,7 +96,7 @@ export async function deleteProductHandler(
     return res.sendStatus(404);
   }
 
-  if (String(product.user) !== userId) {
+  if (String(product.adminUser) !== userId) {
     return res.sendStatus(403);
   }
 

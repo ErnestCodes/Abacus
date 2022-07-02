@@ -7,10 +7,14 @@ import {
 import type { RootState } from "../../app/store";
 import { authState } from "../../interface";
 import authService from "./authService";
-const user = JSON.parse(localStorage.getItem("token") as string);
+const user = JSON.parse(localStorage.getItem("data") as string);
+const accessToken = JSON.parse(localStorage.getItem("accessToken") as string);
+const refreshToken = JSON.parse(localStorage.getItem("refreshToken") as string);
 
 const initialState: authState = {
   user: user ? user : null,
+  accessToken: accessToken ? accessToken : null,
+  refreshToken: refreshToken ? refreshToken : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -92,9 +96,12 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<object>) => {
+        const { accessToken, refreshToken, adminData } = action.payload as any;
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.user = adminData;
+        state.accessToken = accessToken;
+        state.refreshToken = refreshToken;
       })
       .addCase(login.rejected, (state, action: PayloadAction<any>) => {
         state.isLoading = false;

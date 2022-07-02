@@ -5,11 +5,10 @@ import { AdminDocument } from "./admin.models";
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 export interface ProductInput {
-  adminUser: AdminDocument["_id"];
   title: string;
   description: string;
+  image: string;
   price: string;
-  image: object;
   category: string;
 }
 
@@ -44,7 +43,7 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-      type: Object,
+      type: String,
       required: true,
     },
     category: {

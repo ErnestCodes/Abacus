@@ -16,6 +16,7 @@ import { AppDispatch, store } from "./app/store";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loadUser } from "./features/auth/authSlice";
+import NewProducts from "./components/Admin/Layout/NewProducts";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path={routes.register} element={<Register />} />
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
           <Route path={routes.dashboard} element={<HomeAdmin />} />
+          <Route path={routes.new} element={<NewProducts />} />
           <Route path={routes.users} element={<Users />} />
           <Route path={routes.products} element={<Products />} />
         </Routes>

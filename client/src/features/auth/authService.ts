@@ -34,10 +34,19 @@ const loadUser = async (token: any) => {
 // Login user
 const login = async (userData: object) => {
   const response = await axios.post(API_URL, userData);
+  // console.log(response.data.accessToken);
 
   if (response.data) {
-    setAuthToken(response.data);
-    localStorage.setItem("token", JSON.stringify(response.data));
+    // setAuthToken(response.data);
+    localStorage.setItem("data", JSON.stringify(response.data.adminData));
+    localStorage.setItem(
+      "accessToken",
+      JSON.stringify(response.data.accessToken)
+    );
+    localStorage.setItem(
+      "refreshToken",
+      JSON.stringify(response.data.refreshToken)
+    );
   }
 
   return response.data;

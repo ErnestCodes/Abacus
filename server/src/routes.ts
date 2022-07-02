@@ -63,7 +63,7 @@ function routes(app: Express) {
   app.post(
     "/api/products",
     [
-      upload.single("image"),
+      // upload.single("image"),
       requireUser,
       validateResource(createProductSchema),
     ],

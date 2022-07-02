@@ -11,6 +11,9 @@ const payload = {
     price: string({
       required_error: "Price is required",
     }),
+    image: string({
+      required_error: "Image is required",
+    }),
     category: string({
       required_error: "Category is required",
     }),

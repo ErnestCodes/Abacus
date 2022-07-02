@@ -448,14 +448,14 @@ function HomePage() {
                       <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                         <div className="w-44 h-64 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
                           <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
+                            src="https://images.unsplash.com/photo-1518632263555-a442f0d25bb0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
                             alt=""
                             className="w-full h-full object-center object-cover"
                           />
                         </div>
                         <div className="w-44 h-64 rounded-lg overflow-hidden">
                           <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-02.jpg"
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
                             alt=""
                             className="w-full h-full object-center object-cover"
                           />
@@ -562,7 +562,7 @@ function HomePage() {
               </div>
               <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
                 <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg"
+                  src="https://images.unsplash.com/photo-1656078411660-05f2cf994d33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                   alt="Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters."
                   className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
                 />
@@ -586,7 +586,7 @@ function HomePage() {
               </div>
               <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
                 <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-02.jpg"
+                  src="https://images.unsplash.com/photo-1656335362192-2bc9051b1824?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=395&q=80"
                   alt="Walnut desk organizer set with white modular trays, next to porcelain mug on wooden desk."
                   className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
                 />
