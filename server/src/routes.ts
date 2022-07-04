@@ -1,15 +1,18 @@
 import { Express, Request, Response } from "express";
 import {
-  createUserSessionHandler,
-  deleteSessionHandler,
-  getUserSessionHandler,
+  createAdminUserSessionHandler,
+  deleteAdminSessionHandler,
+  getAdminUserSessionHandler,
   googleOauthHandler,
 } from "./controller/session.controller";
-import createUserHandler from "./controller/user.controller";
+import {
+  getCurrentUser,
+  createAdminUserHandler,
+} from "./controller/admin.controller";
 import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
 import { createUserSessionSchema } from "./schema/session.schema";
-import { createUserSchema } from "./schema/user.schema";
+import { createAdminUserSchema } from "./schema/admin.schema";
 import multer from "multer";
 import { fileFilter, storage } from "./utils/imageUpload";
 import {
@@ -34,18 +37,24 @@ function routes(app: Express) {
   });
 
   // Create User route
-  app.post("/api/users", validateResource(createUserSchema), createUserHandler);
+  app.post(
+    "/api/users",
+    validateResource(createAdminUserSchema),
+    createAdminUserHandler
+  );
+
+  app.get("/api/me", requireUser, getCurrentUser);
 
   // Session
   app.post(
     "/api/sessions",
     validateResource(createUserSessionSchema),
-    createUserSessionHandler
+    createAdminUserSessionHandler
   );
 
-  app.get("/api/sessions", requireUser, getUserSessionHandler);
+  app.get("/api/sessions", requireUser, getAdminUserSessionHandler);
 
-  app.delete("/api/sessions", requireUser, deleteSessionHandler);
+  app.delete("/api/sessions", requireUser, deleteAdminSessionHandler);
 
   // OAuth
   app.get("/api/sessions/oauth/google", googleOauthHandler);
@@ -54,7 +63,7 @@ function routes(app: Express) {
   app.post(
     "/api/products",
     [
-      upload.single("image"),
+      // upload.single("image"),
       requireUser,
       validateResource(createProductSchema),
     ],

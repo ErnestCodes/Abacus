@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 import { customAlphabet } from "nanoid";
-import { UserDocument } from "./user.models";
+import { AdminDocument } from "./admin.models";
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 export interface ProductInput {
-  user: UserDocument["_id"];
   title: string;
   description: string;
+  image: string;
   price: string;
-  image: object;
   category: string;
 }
 
@@ -27,9 +26,9 @@ const ProductSchema = new mongoose.Schema(
       unique: true,
       default: () => `product_${nanoid()}`,
     },
-    user: {
+    adminUser: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Admin",
     },
     title: {
       type: String,
@@ -44,7 +43,7 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-      type: Object,
+      type: String,
       required: true,
     },
     category: {
