@@ -29,6 +29,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser, logout, reset } from "../../../features/auth/authSlice";
 import { AppDispatch } from "../../../app/store";
+import { toast } from "react-toastify";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -64,7 +65,20 @@ export default function HomeAdmin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { user } = useSelector((state: any) => state.auth);
+  const { user, isError, isSuccess, accessToken, refreshToken, message } =
+    useSelector((state: any) => state.auth);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    if (isSuccess || accessToken || refreshToken) {
+      dispatch(loadUser({ accessToken, refreshToken }) as any);
+    }
+
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const onLogout = () => {
     dispatch(logout());
@@ -343,7 +357,8 @@ export default function HomeAdmin() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <button
+                          <a
+                            href="#"
                             onClick={onLogout}
                             className={classNames(
                               active ? "bg-gray-100" : "",
@@ -351,7 +366,7 @@ export default function HomeAdmin() {
                             )}
                           >
                             Logout
-                          </button>
+                          </a>
                         )}
                       </Menu.Item>
                     </Menu.Items>

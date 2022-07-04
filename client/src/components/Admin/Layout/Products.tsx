@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -22,6 +22,12 @@ import {
   SearchIcon,
 } from "@heroicons/react/solid";
 import routes from "../../../routes";
+import { loadUser, logout, reset } from "../../../features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../../app/store";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -65,6 +71,36 @@ function classNames(...classes: string[]) {
 
 export default function Products() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const {
+    user,
+    isLoading,
+    accessToken,
+    refreshToken,
+    isError,
+    isSuccess,
+    message,
+  } = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    if (isSuccess || accessToken || refreshToken) {
+      dispatch(loadUser({ accessToken, refreshToken }) as any);
+    }
+
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
+  const onLogOut = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
+  };
 
   return (
     <>
@@ -291,7 +327,7 @@ export default function Products() {
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                         <span className="sr-only">Open user menu for </span>
-                        Nnaemeka
+                        {user && user.name}
                       </span>
                       <ChevronDownIcon
                         className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
@@ -338,6 +374,7 @@ export default function Products() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
+                            onClick={onLogOut}
                             href="#"
                             className={classNames(
                               active ? "bg-gray-100" : "",
@@ -367,12 +404,14 @@ export default function Products() {
                   </p>
                 </div>
                 <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                  >
-                    Add products
-                  </button>
+                  <Link to={routes.new}>
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                    >
+                      Add products
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div className="mt-8 flex flex-col">

@@ -17,9 +17,15 @@ export default function LoginAdmin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state: any) => state.auth
-  );
+  const {
+    user,
+    isLoading,
+    accessToken,
+    refreshToken,
+    isError,
+    isSuccess,
+    message,
+  } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
     if (isError) {
@@ -27,7 +33,7 @@ export default function LoginAdmin() {
     }
 
     if (isSuccess || user) {
-      // loadUser(user);
+      dispatch(loadUser({ accessToken, refreshToken }) as any);
       // dispatch(loadUser(user) as any);
       navigate("/admin_$303248732/dashboard");
     }

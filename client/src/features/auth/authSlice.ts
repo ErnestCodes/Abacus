@@ -7,7 +7,7 @@ import {
 import type { RootState } from "../../app/store";
 import { authState } from "../../interface";
 import authService from "./authService";
-const user = JSON.parse(localStorage.getItem("data") as string);
+const user = JSON.parse(localStorage.getItem("user") as string);
 const accessToken = JSON.parse(localStorage.getItem("accessToken") as string);
 const refreshToken = JSON.parse(localStorage.getItem("refreshToken") as string);
 
@@ -60,9 +60,9 @@ export const login = createAsyncThunk(
 // Login user
 export const loadUser = createAsyncThunk(
   "auth/loadUser",
-  async (token: object, thunkAPI) => {
+  async (token: { accessToken: string; refreshToken: string }, thunkAPI) => {
     try {
-      return await authService.loadUser(token);
+      return await authService.loadUser(token.accessToken, token.refreshToken);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -96,10 +96,9 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<object>) => {
-        const { accessToken, refreshToken, adminData } = action.payload as any;
+        const { accessToken, refreshToken } = action.payload as any;
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = adminData;
         state.accessToken = accessToken;
         state.refreshToken = refreshToken;
       })
@@ -110,6 +109,20 @@ export const authSlice = createSlice({
         state.user = null;
       })
       .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+      })
+      .addCase(loadUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loadUser.fulfilled, (state, action: PayloadAction<object>) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(loadUser.rejected, (state, action: PayloadAction<any>) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
         state.user = null;
       });
   },

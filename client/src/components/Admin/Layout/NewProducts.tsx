@@ -26,6 +26,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../../features/products/productSlice";
 import { toast } from "react-toastify";
+import { AppDispatch } from "../../../app/store";
+import { logout, reset } from "../../../features/auth/authSlice";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -77,11 +79,12 @@ function NewProducts() {
     image: "",
   });
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: any) => state.auth);
 
   const { title, image, price, description, category } = formData;
   //   console.log(selectedFile);
-
+  const navigate = useNavigate();
   const { isSuccess } = useSelector((state: any) => state.product);
 
   useEffect(() => {
@@ -109,14 +112,12 @@ function NewProducts() {
     };
 
     dispatch(createProduct(productData) as any);
+  };
 
-    setFormData({
-      title: "",
-      price: "",
-      description: "",
-      image: "",
-      category: "",
-    });
+  const onLogOut = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
   };
 
   return (
@@ -344,7 +345,7 @@ function NewProducts() {
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                         <span className="sr-only">Open user menu for </span>
-                        Nnaemeka
+                        {user && user.name}
                       </span>
                       <ChevronDownIcon
                         className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
@@ -391,6 +392,7 @@ function NewProducts() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
+                            onClick={onLogOut}
                             href="#"
                             className={classNames(
                               active ? "bg-gray-100" : "",
