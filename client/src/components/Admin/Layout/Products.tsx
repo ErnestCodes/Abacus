@@ -97,7 +97,7 @@ export default function Products() {
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const onLogOut = () => {
-    dispatch(logout());
+    dispatch(logout({ accessToken, refreshToken }));
     dispatch(reset());
     navigate("/");
   };

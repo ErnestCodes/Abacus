@@ -16,7 +16,7 @@ const loadUser = async (accessToken: any, refreshToken: any) => {
     const res = await axios.get("/api/me", config);
     return res.data;
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 };
 
@@ -39,9 +39,22 @@ const login = async (userData: object) => {
 };
 
 // Logout user
-const logout = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
+const logout = async (accessToken: any, refreshToken: any) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "x-refresh": `${refreshToken}`,
+    },
+  };
+  try {
+    const res = await axios.delete(API_URL, config);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  }
 };
 
 const authService = {
