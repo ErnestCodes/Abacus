@@ -5,7 +5,6 @@ import productService from "./productService";
 
 const initialState: productState = {
   products: [],
-  allProducts: [],
   isProductError: false,
   isProductSuccess: false,
   isProductLoading: false,
@@ -15,13 +14,20 @@ const initialState: productState = {
 // Create new goal
 export const createProduct = createAsyncThunk(
   "product/create",
-  async (productData: object, { getState }) => {
+  async (productData: object, thunkAPI) => {
     try {
       const accessToken = JSON.parse(
         localStorage.getItem("accessToken") as string
       );
-      console.log(accessToken);
-      return await productService.createProduct(productData, accessToken);
+      const refreshToken = JSON.parse(
+        localStorage.getItem("accessToken") as string
+      );
+      // console.log(accessToken);
+      return await productService.createProduct(
+        productData,
+        accessToken,
+        refreshToken
+      );
     } catch (error: any) {
       const message =
         (error.response &&
@@ -30,7 +36,7 @@ export const createProduct = createAsyncThunk(
         error.message ||
         error.toString();
       return message;
-      // return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -38,11 +44,12 @@ export const createProduct = createAsyncThunk(
 // Get user goals
 export const getProducts = createAsyncThunk(
   "product/getProduct",
-  async (_, { getState }) => {
+  async (productId: string, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token") as any;
-      const id = getState() as { id: productState };
-      return await productService.getProducts(token.accessToken, id);
+      const accessToken = JSON.parse(
+        localStorage.getItem("accessToken") as any
+      );
+      return await productService.getProducts(accessToken, productId);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -50,7 +57,7 @@ export const getProducts = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      // return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -72,24 +79,33 @@ export const getAllProducts = createAsyncThunk(
   }
 );
 
-// Delete user goal
-// export const deleteGoal = createAsyncThunk(
-//   'goals/delete',
-//   async (id, thunkAPI) => {
-//     try {
-//       const token = thunkAPI.getState().auth.user.token
-//       return await goalService.deleteGoal(id, token)
-//     } catch (error) {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString()
-//       return thunkAPI.rejectWithValue(message)
-//     }
-//   }
-// )
+// Delete a product
+export const deleteProduct = createAsyncThunk(
+  "goals/delete",
+  async (productId: string, thunkAPI) => {
+    try {
+      const accessToken = JSON.parse(
+        localStorage.getItem("accessToken") as string
+      );
+      const refreshToken = JSON.parse(
+        localStorage.getItem("refreshToken") as string
+      );
+      return await productService.deleteProduct(
+        productId,
+        accessToken,
+        refreshToken
+      );
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const productSlice = createSlice({
   name: "product",
@@ -120,10 +136,25 @@ export const productSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           state.isProductLoading = false;
           state.isProductSuccess = true;
-          state.allProducts = action.payload;
+          state.products = action.payload;
         }
       )
       .addCase(getAllProducts.rejected, (state, action: PayloadAction<any>) => {
+        state.isProductLoading = false;
+        state.isProductError = true;
+        state.productMessage = action.payload;
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.isProductLoading = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.isProductLoading = false;
+        state.isProductSuccess = true;
+        state.products = state.products.filter(
+          (product) => product._id !== action.payload.id
+        );
+      })
+      .addCase(deleteProduct.rejected, (state, action: PayloadAction<any>) => {
         state.isProductLoading = false;
         state.isProductError = true;
         state.productMessage = action.payload;

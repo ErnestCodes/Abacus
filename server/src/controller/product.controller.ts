@@ -23,7 +23,10 @@ export async function createProductHandler(
   //   console.log(image);
   // if (image == undefined) return res.send("image is not defined");
   try {
-    const product = await createProduct(body);
+    const product = await createProduct({
+      ...body,
+      adminUser: res.locals.user._id,
+    });
 
     return res.send(product);
   } catch (error: any) {
@@ -51,7 +54,6 @@ export async function updateProductHandler(
   const update = { ...body, image };
 
   const product = await findProduct({ productId });
-  const adminUser = await AdminModel.findById({ userId });
 
   if (image == undefined) return res.send("image is not defined");
 
@@ -59,7 +61,7 @@ export async function updateProductHandler(
     return res.sendStatus(404);
   }
 
-  if (adminUser !== userId) {
+  if (String(product?.adminUser) !== userId) {
     return res.sendStatus(403);
   }
 
@@ -102,15 +104,17 @@ export async function deleteProductHandler(
   const userId = res.locals.user._id;
 
   const productId = req.params.productId;
+  // console.log(productId);
 
+  // const product = await ProductModel.findById(productId);
   const product = await findProduct({ productId });
-  const adminUser = await AdminModel.findById({ userId });
 
   if (!product) {
     return res.sendStatus(404);
   }
 
-  if (adminUser !== userId) {
+  if (String(product?.adminUser) !== userId) {
+    console.log("users do not match");
     return res.sendStatus(403);
   }
 

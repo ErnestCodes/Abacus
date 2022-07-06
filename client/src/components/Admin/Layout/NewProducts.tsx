@@ -114,12 +114,13 @@ function NewProducts() {
     };
 
     dispatch(createProduct(productData) as any);
+    toast.success("Uploaded successfully");
   };
 
   const onLogOut = () => {
     dispatch(logout({ accessToken, refreshToken }));
     dispatch(reset());
-    navigate("/");
+    // navigate("/");
   };
 
   return (

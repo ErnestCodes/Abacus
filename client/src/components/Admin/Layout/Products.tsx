@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
+  deleteProduct,
   getAllProducts,
   productReset,
 } from "../../../features/products/productSlice";
@@ -76,7 +77,7 @@ function classNames(...classes: string[]) {
 
 export default function Products() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { allProducts } = useSelector((state: any) => state.product);
+  const { products } = useSelector((state: any) => state.product);
 
   const {
     user,
@@ -96,7 +97,7 @@ export default function Products() {
     // return () => {
     //   dispatch(productReset());
     // };
-  }, [allProducts, dispatch]);
+  }, [products, dispatch]);
 
   useEffect(() => {
     if (isError) {
@@ -467,8 +468,8 @@ export default function Products() {
                           </tr>
                         </thead>
                         <tbody className="bg-white">
-                          {allProducts &&
-                            allProducts.map((product: any) => (
+                          {products &&
+                            products.map((product: any) => (
                               <tr key={product._id} className="bg-gray-50">
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                   {product.title}
@@ -486,6 +487,11 @@ export default function Products() {
 
                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                   <a
+                                    onClick={() =>
+                                      dispatch(
+                                        deleteProduct(`${product.productId}`)
+                                      )
+                                    }
                                     href="#"
                                     className="text-indigo-600 hover:text-indigo-900"
                                   >
