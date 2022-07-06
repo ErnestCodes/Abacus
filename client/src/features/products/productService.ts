@@ -49,6 +49,13 @@ const getProducts = async (token: any, productId: any) => {
   return response.data;
 };
 
+// Get all Products
+const getAllProduct = async () => {
+  const res = await axios.get("/api/products");
+  // console.log(res.data);
+  return res.data;
+};
+
 // Delete user goal
 const deleteProduct = async (productId: string, token: any) => {
   const config = {
@@ -67,6 +74,7 @@ const productService = {
   getProducts,
   deleteProduct,
   updateProduct,
+  getAllProduct,
 };
 
 export default productService;

@@ -80,7 +80,9 @@ function NewProducts() {
   });
 
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: any) => state.auth);
+  const { user, accessToken, refreshToken } = useSelector(
+    (state: any) => state.auth
+  );
 
   const { title, image, price, description, category } = formData;
   //   console.log(selectedFile);
@@ -115,7 +117,7 @@ function NewProducts() {
   };
 
   const onLogOut = () => {
-    dispatch(logout());
+    dispatch(logout({ accessToken, refreshToken }));
     dispatch(reset());
     navigate("/");
   };

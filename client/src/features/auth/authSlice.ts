@@ -75,9 +75,12 @@ export const loadUser = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await authService.logout();
-});
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (token: { accessToken: string; refreshToken: string }) => {
+    await authService.logout(token.accessToken, token.refreshToken);
+  }
+);
 
 export const authSlice = createSlice({
   name: "auth",
@@ -110,6 +113,8 @@ export const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
       })
       .addCase(loadUser.pending, (state) => {
         state.isLoading = true;

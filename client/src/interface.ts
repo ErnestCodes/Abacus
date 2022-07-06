@@ -11,8 +11,9 @@ export interface authState {
 
 export interface productState {
   products: [];
-  isError: boolean;
-  isSuccess: boolean;
-  isLoading: boolean;
-  message: string;
+  allProducts: [];
+  isProductError: boolean;
+  isProductSuccess: boolean;
+  isProductLoading: boolean;
+  productMessage: string;
 }

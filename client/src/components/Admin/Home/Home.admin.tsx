@@ -25,7 +25,7 @@ import {
   SearchIcon,
 } from "@heroicons/react/solid";
 import routes from "../../../routes";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser, logout, reset } from "../../../features/auth/authSlice";
 import { AppDispatch } from "../../../app/store";
@@ -81,9 +81,8 @@ export default function HomeAdmin() {
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const onLogout = () => {
-    dispatch(logout());
+    dispatch(logout({ accessToken, refreshToken }));
     dispatch(reset());
-    navigate("/");
   };
 
   return (

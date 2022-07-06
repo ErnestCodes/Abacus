@@ -28,6 +28,11 @@ import { AppDispatch } from "../../../app/store";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  getAllProducts,
+  productReset,
+} from "../../../features/products/productSlice";
+import truncate from "../../../utils/truncate";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -71,6 +76,7 @@ function classNames(...classes: string[]) {
 
 export default function Products() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { allProducts } = useSelector((state: any) => state.product);
 
   const {
     user,
@@ -85,6 +91,14 @@ export default function Products() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    dispatch(getAllProducts());
+
+    // return () => {
+    //   dispatch(productReset());
+    // };
+  }, [allProducts, dispatch]);
+
+  useEffect(() => {
     if (isError) {
       toast.error(message);
     }
@@ -97,9 +111,8 @@ export default function Products() {
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const onLogOut = () => {
-    dispatch(logout());
+    dispatch(logout({ accessToken, refreshToken }));
     dispatch(reset());
-    navigate("/");
   };
 
   return (
@@ -437,13 +450,13 @@ export default function Products() {
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Email
+                              Price
                             </th>
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                             >
-                              Image
+                              Category
                             </th>
                             <th
                               scope="col"
@@ -454,38 +467,36 @@ export default function Products() {
                           </tr>
                         </thead>
                         <tbody className="bg-white">
-                          {people.map((person, personIdx) => (
-                            <tr
-                              key={person.email}
-                              className={
-                                personIdx % 2 === 0 ? undefined : "bg-gray-50"
-                              }
-                            >
-                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                {person.name}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                {person.desc}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                {person.email}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                {person.image}
-                              </td>
-                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                <a
-                                  href="#"
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
-                                  Delete
-                                  <span className="sr-only">
-                                    , {person.name}
-                                  </span>
-                                </a>
-                              </td>
-                            </tr>
-                          ))}
+                          {allProducts &&
+                            allProducts.map((product: any) => (
+                              <tr key={product._id} className="bg-gray-50">
+                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                  {product.title}
+                                </td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                  {truncate(product.description, 45)}
+                                  {/* {product.description} */}
+                                </td>
+                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                  {product.price}
+                                </td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                  {product.category}
+                                </td>
+
+                                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                  <a
+                                    href="#"
+                                    className="text-indigo-600 hover:text-indigo-900"
+                                  >
+                                    Delete
+                                    <span className="sr-only">
+                                      , {product.title}
+                                    </span>
+                                  </a>
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>

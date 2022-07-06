@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import AdminModel from "../models/admin.models";
+import ProductModel from "../models/product.model";
 import {
   CreateProductInput,
   DeleteProductInput,
@@ -49,6 +51,7 @@ export async function updateProductHandler(
   const update = { ...body, image };
 
   const product = await findProduct({ productId });
+  const adminUser = await AdminModel.findById({ userId });
 
   if (image == undefined) return res.send("image is not defined");
 
@@ -56,7 +59,7 @@ export async function updateProductHandler(
     return res.sendStatus(404);
   }
 
-  if (String(product.adminUser) !== userId) {
+  if (adminUser !== userId) {
     return res.sendStatus(403);
   }
 
@@ -65,6 +68,16 @@ export async function updateProductHandler(
   });
 
   return res.send(updateProduct);
+}
+
+export async function getAllProducts(req: Request, res: Response) {
+  try {
+    const products = await ProductModel.find();
+    // console.log(products);
+    return res.send(products);
+  } catch (error: any) {
+    console.log(error.message);
+  }
 }
 
 export async function getProductHandler(
@@ -91,12 +104,13 @@ export async function deleteProductHandler(
   const productId = req.params.productId;
 
   const product = await findProduct({ productId });
+  const adminUser = await AdminModel.findById({ userId });
 
   if (!product) {
     return res.sendStatus(404);
   }
 
-  if (String(product.adminUser) !== userId) {
+  if (adminUser !== userId) {
     return res.sendStatus(403);
   }
 
