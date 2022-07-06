@@ -18,6 +18,7 @@ import { fileFilter, storage } from "./utils/imageUpload";
 import {
   createProductHandler,
   deleteProductHandler,
+  getAllProducts,
   getProductHandler,
   updateProductHandler,
 } from "./controller/product.controller";
@@ -69,6 +70,8 @@ function routes(app: Express) {
     ],
     createProductHandler
   );
+
+  app.get("/api/products", getAllProducts);
 
   app.put(
     "/api/products/:productId",
