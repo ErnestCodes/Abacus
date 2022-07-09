@@ -3,7 +3,6 @@ import {
   createAdminUserSessionHandler,
   deleteAdminSessionHandler,
   getAdminUserSessionHandler,
-  googleOauthHandler,
 } from "./controller/session.controller";
 import {
   getCurrentUser,
@@ -28,6 +27,7 @@ import {
   getProductSchema,
   updateProductSchema,
 } from "./schema/product.schema";
+import { googleOauthHandler } from "./controller/userSession.controller";
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 

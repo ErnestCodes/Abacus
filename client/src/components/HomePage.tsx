@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
+import getGoogleOAuthURL from "../utils/getGoogleUrl";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -181,20 +182,20 @@ function HomePage() {
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
                 <div className="flow-root">
-                  <Link
-                    to="login"
+                  <a
+                    href={getGoogleOAuthURL()}
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Sign in
-                  </Link>
+                  </a>
                 </div>
                 <div className="flow-root">
-                  <Link
-                    to="register"
+                  <a
+                    href=""
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Create account
-                  </Link>
+                  </a>
                 </div>
               </div>
 
@@ -383,14 +384,14 @@ function HomePage() {
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <a
-                    href="./login"
+                    href={getGoogleOAuthURL()}
                     className="text-sm font-medium text-white hover:text-gray-200"
                   >
                     Sign in
                   </a>
                   <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                   <a
-                    href="./register"
+                    href={getGoogleOAuthURL()}
                     className="text-sm font-medium text-white hover:text-gray-200"
                   >
                     Create account
