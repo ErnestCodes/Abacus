@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./App.css";
+// import "./App.css";
 import {
   BrowserRouter as Router,
   Routes,
@@ -15,13 +15,16 @@ import HomeAdmin from "./components/Admin/Home/Home.admin";
 import Users from "./components/Admin/Layout/Users";
 import Products from "./components/Admin/Layout/Products";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
+import { injectStyle } from "react-toastify/dist/inject-style";
 import setAuthToken from "./utils/setAuthToken";
 import { AppDispatch, store } from "./app/store";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./features/auth/authSlice";
 import NewProducts from "./components/Admin/Layout/NewProducts";
+
+injectStyle();
 
 function App() {
   const { isSuccess, accessToken, refreshToken } = useSelector(

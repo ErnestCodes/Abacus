@@ -14,20 +14,9 @@ const initialState: productState = {
 // Create new goal
 export const createProduct = createAsyncThunk(
   "product/create",
-  async (productData: object, thunkAPI) => {
+  async (productData: any, thunkAPI) => {
     try {
-      const accessToken = JSON.parse(
-        localStorage.getItem("accessToken") as string
-      );
-      const refreshToken = JSON.parse(
-        localStorage.getItem("accessToken") as string
-      );
-      // console.log(accessToken);
-      return await productService.createProduct(
-        productData,
-        accessToken,
-        refreshToken
-      );
+      return await productService.createProduct(productData);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -35,7 +24,6 @@ export const createProduct = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      return message;
       return thunkAPI.rejectWithValue(message);
     }
   }

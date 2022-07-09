@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Popover, Transition, Dialog, Tab } from "@headlessui/react";
 import {
   footerNavigation,
@@ -14,6 +14,9 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../app/store";
+import { getAllProducts } from "../features/products/productSlice";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -21,6 +24,17 @@ function classNames(...classes: string[]) {
 
 function HomePage() {
   const [open, setOpen] = useState(false);
+  const { products } = useSelector((state: any) => state.product);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+
+    // return () => {
+    //   dispatch(productReset());
+    // };
+  }, [products, dispatch]);
+
   return (
     <div className="bg-white">
       {/* Mobile menu */}
@@ -205,7 +219,7 @@ function HomePage() {
         {/* Top navigation */}
         <nav
           aria-label="Top"
-          className="relative z-20 bg-white bg-opacity-90 backdrop-filter backdrop-blur-xl"
+          className="relative z-20 bg-black bg-opacity-90 backdrop-filter backdrop-blur-xl"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="h-16 flex items-center">
@@ -219,12 +233,12 @@ function HomePage() {
               </button>
 
               {/* Logo */}
-              <div className="ml-4 flex lg:ml-0">
+              <div className="ml-4 mb-3 flex lg:ml-0">
                 <a href="#">
                   <span className="sr-only">Workflow</span>
                   <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
+                    className="h-14 w-auto"
+                    src="https://abacus-47e6d.web.app/img/abacus223.png"
                     alt=""
                   />
                 </a>
@@ -242,7 +256,7 @@ function HomePage() {
                               className={classNames(
                                 open
                                   ? "border-indigo-600 text-indigo-600"
-                                  : "border-transparent text-gray-700 hover:text-gray-800",
+                                  : "border-transparent text-white",
                                 "relative z-10 flex items-center transition-colors ease-out duration-200 text-sm font-medium border-b-2 -mb-px pt-px"
                               )}
                             >
@@ -358,7 +372,7 @@ function HomePage() {
                     <a
                       key={page.name}
                       href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
+                      className="flex items-center text-sm font-medium text-white"
                     >
                       {page.name}
                     </a>
@@ -370,37 +384,28 @@ function HomePage() {
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <a
                     href="./login"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                    className="text-sm font-medium text-white hover:text-gray-200"
                   >
                     Sign in
                   </a>
                   <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                   <a
                     href="./register"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                    className="text-sm font-medium text-white hover:text-gray-200"
                   >
                     Create account
                   </a>
-                </div>
-
-                <div className="hidden lg:ml-8 lg:flex">
                   <a
-                    href="#"
-                    className="text-gray-700 hover:text-gray-800 flex items-center"
+                    href="./register"
+                    className="text-sm font-medium text-white hover:text-gray-200"
                   >
-                    <img
-                      src="https://tailwindui.com/img/flags/flag-canada.svg"
-                      alt=""
-                      className="w-5 h-auto block flex-shrink-0"
-                    />
-                    <span className="ml-3 block text-sm font-medium">CAD</span>
-                    <span className="sr-only">, change currency</span>
+                    Orders
                   </a>
                 </div>
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
+                  <a href="#" className="p-2 text-gray-200">
                     <span className="sr-only">Search</span>
                     <SearchIcon className="w-6 h-6" aria-hidden="true" />
                   </a>
@@ -410,10 +415,10 @@ function HomePage() {
                 <div className="ml-4 flow-root lg:ml-6">
                   <a href="#" className="group -m-2 p-2 flex items-center">
                     <ShoppingBagIcon
-                      className="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                      className="flex-shrink-0 h-6 w-6 text-gray-200"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                    <span className="ml-2 text-sm font-medium text-gray-200">
                       0
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
@@ -425,7 +430,7 @@ function HomePage() {
         </nav>
 
         {/* Hero section */}
-        <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48 bg-gradient-to-r from-white to-black ">
+        <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48 bg-gradient-to-r from-white to-[#f0c14b] ">
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:static">
             <div className="sm:max-w-lg">
               <h1 className="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">
@@ -506,7 +511,7 @@ function HomePage() {
 
                 <a
                   href="#"
-                  className="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
+                  className="inline-block text-center bg-[#f0c14b] border border-[#a88734] rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
                 >
                   Shop Collection
                 </a>
@@ -517,6 +522,231 @@ function HomePage() {
       </header>
 
       <main>
+        {/* Featured section */}
+        {/* <section aria-labelledby="cause-heading">
+          <div className="relative bg-gray-800 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
+            <div className="absolute inset-0 overflow-hidden">
+              <img
+                src="https://tailwindui.com/img/ecommerce-images/home-page-03-feature-section-full-width.jpg"
+                alt=""
+                className="w-full h-full object-center object-cover"
+              />
+            </div>
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gray-900 bg-opacity-50"
+            />
+            <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
+              <h2
+                id="cause-heading"
+                className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
+              >
+                Long-term thinking
+              </h2>
+              <p className="mt-3 text-xl text-white">
+                We're committed to responsible, sustainable, and ethical
+                manufacturing. Our small-scale approach allows us to focus on
+                quality and reduce our impact. We're doing our best to delay the
+                inevitable heat-death of the universe.
+              </p>
+              <a
+                href="#"
+                className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
+              >
+                Read our story
+              </a>
+            </div>
+          </div>
+        </section> */}
+
+        {/* Trending products */}
+        <section aria-labelledby="trending-heading" className="bg-white">
+          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-32 lg:px-8">
+            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
+              <h2
+                id="trending-heading"
+                className="text-2xl font-extrabold tracking-tight text-gray-900"
+              >
+                Trending shoes
+              </h2>
+              <a
+                href="#"
+                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
+              >
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div>
+
+            <div className="mt-8 relative">
+              <div className="relative w-full overflow-x-auto">
+                <ul
+                  role="list"
+                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
+                >
+                  {products &&
+                    products
+                      .filter((product: any) => product.category == "Shoes")
+                      .map((product: any) => (
+                        <li
+                          key={product._id}
+                          className="w-64 inline-flex flex-col text-center lg:w-auto"
+                        >
+                          <div className="group relative">
+                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                className="w-full h-full object-center object-cover group-hover:opacity-75"
+                              />
+                            </div>
+                            <div className="mt-6">
+                              {/* <p className="text-sm text-gray-500">
+                            {product.color}
+                          </p> */}
+                              <h3 className="mt-1 font-semibold text-gray-900">
+                                <a href={product.href}>
+                                  <span className="absolute inset-0" />
+                                  {product.title}
+                                </a>
+                              </h3>
+                              <p className="mt-1 text-gray-900">
+                                ${product.price}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
+                          >
+                            Add
+                          </button>
+                          {/* <h4 className="sr-only">Available colors</h4>
+                      <ul
+                        role="list"
+                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
+                      >
+                        {product.availableColors.map((color) => (
+                          <li
+                            key={color.name}
+                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
+                            style={{ backgroundColor: color.colorBg }}
+                          >
+                            <span className="sr-only">{color.name}</span>
+                          </li>
+                        ))}
+                      </ul> */}
+                        </li>
+                      ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* <div className="mt-12 px-4 sm:hidden">
+              <a
+                href="#"
+                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div> */}
+          </div>
+        </section>
+
+        {/* Trending accessories */}
+        <section aria-labelledby="trending-heading" className="bg-white">
+          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-10 lg:px-8">
+            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
+              <h2
+                id="trending-heading"
+                className="text-2xl font-extrabold tracking-tight text-gray-900"
+              >
+                Trending accessories
+              </h2>
+              <a
+                href="#"
+                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
+              >
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div>
+
+            <div className="mt-8 relative">
+              <div className="relative w-full overflow-x-auto">
+                <ul
+                  role="list"
+                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
+                >
+                  {products &&
+                    products
+                      .filter(
+                        (product: any) => product.category == "Accessories"
+                      )
+                      .map((product: any) => (
+                        <li
+                          key={product._id}
+                          className="w-64 inline-flex flex-col text-center lg:w-auto"
+                        >
+                          <div className="group relative">
+                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                className="w-full h-full object-center object-cover group-hover:opacity-75"
+                              />
+                            </div>
+                            <div className="mt-6">
+                              {/* <p className="text-sm text-gray-500">
+                            {product.color}
+                          </p> */}
+                              <h3 className="mt-1 font-semibold text-gray-900">
+                                <a href={product.href}>
+                                  <span className="absolute inset-0" />
+                                  {product.title}
+                                </a>
+                              </h3>
+                              <p className="mt-1 text-gray-900">
+                                ${product.price}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
+                          >
+                            Add
+                          </button>
+                          {/* <h4 className="sr-only">Available colors</h4>
+                      <ul
+                        role="list"
+                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
+                      >
+                        {product.availableColors.map((color) => (
+                          <li
+                            key={color.name}
+                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
+                            style={{ backgroundColor: color.colorBg }}
+                          >
+                            <span className="sr-only">{color.name}</span>
+                          </li>
+                        ))}
+                      </ul> */}
+                        </li>
+                      ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* <div className="mt-12 px-4 sm:hidden">
+              <a
+                href="#"
+                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div> */}
+          </div>
+        </section>
+
         {/* Category section */}
         <section aria-labelledby="category-heading" className="bg-gray-50">
           <div className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
@@ -529,7 +759,7 @@ function HomePage() {
               </h2>
               <a
                 href="#"
-                className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block"
+                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
               >
                 Browse all categories<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -613,167 +843,10 @@ function HomePage() {
             <div className="mt-6 sm:hidden">
               <a
                 href="#"
-                className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+                className="block text-sm font-semibold text-[#f0c14b]"
               >
                 Browse all categories<span aria-hidden="true"> &rarr;</span>
               </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Featured section */}
-        <section aria-labelledby="cause-heading">
-          <div className="relative bg-gray-800 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
-            <div className="absolute inset-0 overflow-hidden">
-              <img
-                src="https://tailwindui.com/img/ecommerce-images/home-page-03-feature-section-full-width.jpg"
-                alt=""
-                className="w-full h-full object-center object-cover"
-              />
-            </div>
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gray-900 bg-opacity-50"
-            />
-            <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
-              <h2
-                id="cause-heading"
-                className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
-              >
-                Long-term thinking
-              </h2>
-              <p className="mt-3 text-xl text-white">
-                We're committed to responsible, sustainable, and ethical
-                manufacturing. Our small-scale approach allows us to focus on
-                quality and reduce our impact. We're doing our best to delay the
-                inevitable heat-death of the universe.
-              </p>
-              <a
-                href="#"
-                className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
-              >
-                Read our story
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Trending products */}
-        <section aria-labelledby="trending-heading" className="bg-white">
-          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-32 lg:px-8">
-            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
-              <h2
-                id="trending-heading"
-                className="text-2xl font-extrabold tracking-tight text-gray-900"
-              >
-                Trending products
-              </h2>
-              <a
-                href="#"
-                className="hidden sm:block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                See everything<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
-
-            <div className="mt-8 relative">
-              <div className="relative w-full overflow-x-auto">
-                <ul
-                  role="list"
-                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
-                >
-                  {trendingProducts.map((product) => (
-                    <li
-                      key={product.id}
-                      className="w-64 inline-flex flex-col text-center lg:w-auto"
-                    >
-                      <div className="group relative">
-                        <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
-                          <img
-                            src={product.imageSrc}
-                            alt={product.imageAlt}
-                            className="w-full h-full object-center object-cover group-hover:opacity-75"
-                          />
-                        </div>
-                        <div className="mt-6">
-                          <p className="text-sm text-gray-500">
-                            {product.color}
-                          </p>
-                          <h3 className="mt-1 font-semibold text-gray-900">
-                            <a href={product.href}>
-                              <span className="absolute inset-0" />
-                              {product.name}
-                            </a>
-                          </h3>
-                          <p className="mt-1 text-gray-900">{product.price}</p>
-                        </div>
-                      </div>
-
-                      <h4 className="sr-only">Available colors</h4>
-                      <ul
-                        role="list"
-                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
-                      >
-                        {product.availableColors.map((color) => (
-                          <li
-                            key={color.name}
-                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
-                            style={{ backgroundColor: color.colorBg }}
-                          >
-                            <span className="sr-only">{color.name}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-12 px-4 sm:hidden">
-              <a
-                href="#"
-                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                See everything<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Collections */}
-        <section aria-labelledby="collections-heading" className="bg-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto py-16 sm:py-24 lg:py-32 lg:max-w-none">
-              <h2
-                id="collections-heading"
-                className="text-2xl font-extrabold text-gray-900"
-              >
-                Collections
-              </h2>
-
-              <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
-                {collections.map((collection) => (
-                  <div key={collection.name} className="group relative">
-                    <div className="relative w-full h-80 bg-white rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
-                      <img
-                        src={collection.imageSrc}
-                        alt={collection.imageAlt}
-                        className="w-full h-full object-center object-cover"
-                      />
-                    </div>
-                    <h3 className="mt-6 text-sm text-gray-500">
-                      <a href={collection.href}>
-                        <span className="absolute inset-0" />
-                        {collection.name}
-                      </a>
-                    </h3>
-                    <p className="text-base font-semibold text-gray-900">
-                      {collection.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </section>
@@ -790,7 +863,7 @@ function HomePage() {
               </h2>
               <a
                 href="#"
-                className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block"
+                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
               >
                 Browse all favorites<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -820,7 +893,7 @@ function HomePage() {
             <div className="mt-6 sm:hidden">
               <a
                 href="#"
-                className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+                className="block text-sm font-semibold text-[#f0c14b]"
               >
                 Browse all favorites<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -831,7 +904,7 @@ function HomePage() {
         {/* CTA section */}
         <section aria-labelledby="sale-heading">
           <div className="pt-32 overflow-hidden sm:pt-14">
-            <div className="bg-gray-800">
+            <div className="bg-[#f0c14b]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative pt-48 pb-16 sm:pb-24">
                   <div>
@@ -912,7 +985,7 @@ function HomePage() {
         </section>
       </main>
 
-      <footer aria-labelledby="footer-heading" className="bg-gray-800">
+      <footer aria-labelledby="footer-heading" className="bg-[#f0c14b]">
         <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
@@ -921,7 +994,7 @@ function HomePage() {
             <div className="grid grid-cols-2 gap-8 xl:col-span-2">
               <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-300">Shop</h3>
+                  <h3 className="text-sm font-medium text-white">Shop</h3>
                   <ul role="list" className="mt-6 space-y-6">
                     {footerNavigation.shop.map((item) => (
                       <li key={item.name} className="text-sm">
@@ -936,7 +1009,7 @@ function HomePage() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-300">Company</h3>
+                  <h3 className="text-sm font-medium text-white">Company</h3>
                   <ul role="list" className="mt-6 space-y-6">
                     {footerNavigation.company.map((item) => (
                       <li key={item.name} className="text-sm">
@@ -953,7 +1026,7 @@ function HomePage() {
               </div>
               <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-300">Account</h3>
+                  <h3 className="text-sm font-medium text-white">Account</h3>
                   <ul role="list" className="mt-6 space-y-6">
                     {footerNavigation.account.map((item) => (
                       <li key={item.name} className="text-sm">
@@ -968,7 +1041,7 @@ function HomePage() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-300">Connect</h3>
+                  <h3 className="text-sm font-medium text-white">Connect</h3>
                   <ul role="list" className="mt-6 space-y-6">
                     {footerNavigation.connect.map((item) => (
                       <li key={item.name} className="text-sm">
@@ -985,7 +1058,7 @@ function HomePage() {
               </div>
             </div>
             <div className="mt-16 md:mt-16 xl:mt-0">
-              <h3 className="text-sm font-medium text-gray-300">
+              <h3 className="text-sm font-medium text-white">
                 Sign up for our newsletter
               </h3>
               <p className="mt-6 text-sm text-white">
@@ -1000,12 +1073,12 @@ function HomePage() {
                   type="text"
                   autoComplete="email"
                   required
-                  className="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base text-indigo-500 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  className="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base placeholder-gray-500 focus:outline-none"
                 />
                 <div className="ml-4 flex-shrink-0">
                   <button
                     type="submit"
-                    className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="w-full bg-gray-800 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Sign up
                   </button>
@@ -1015,7 +1088,7 @@ function HomePage() {
           </div>
 
           <div className="border-t border-gray-200 py-10">
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-white">
               Copyright &copy; 2022 Ares Inc.
             </p>
           </div>

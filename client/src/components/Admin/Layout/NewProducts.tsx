@@ -87,13 +87,7 @@ function NewProducts() {
   const { title, image, price, description, category } = formData;
   //   console.log(selectedFile);
   const navigate = useNavigate();
-  const { isSuccess } = useSelector((state: any) => state.product);
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Uploaded successful");
-    }
-  }, [isSuccess, dispatch]);
+  const { isProductSuccess } = useSelector((state: any) => state.product);
 
   const onChange = (e: any) => {
     setFormData((prevState) => ({
@@ -114,7 +108,7 @@ function NewProducts() {
     };
 
     dispatch(createProduct(productData) as any);
-    toast.success("Uploaded successfully");
+    toast.success("Uploaded successful");
   };
 
   const onLogOut = () => {

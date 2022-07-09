@@ -3,11 +3,13 @@ import axios from "axios";
 const API_URL = "/api/products/";
 
 // Create new goal
-const createProduct = async (
-  productData: object,
-  accessToken: string,
-  refreshToken: string
-) => {
+const createProduct = async (productData: any) => {
+  const accessToken = await JSON.parse(
+    localStorage.getItem("accessToken") as string
+  );
+  const refreshToken = await JSON.parse(
+    localStorage.getItem("refreshToken") as string
+  );
   const config = {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -16,6 +18,7 @@ const createProduct = async (
   };
 
   const response = await axios.post(API_URL, productData, config);
+  console.log(response.data);
 
   return response.data;
 };
