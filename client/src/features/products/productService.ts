@@ -3,14 +3,22 @@ import axios from "axios";
 const API_URL = "/api/products/";
 
 // Create new goal
-const createProduct = async (productData: object, token: string) => {
+const createProduct = async (productData: any) => {
+  const accessToken = await JSON.parse(
+    localStorage.getItem("accessToken") as string
+  );
+  const refreshToken = await JSON.parse(
+    localStorage.getItem("refreshToken") as string
+  );
   const config = {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
+      "x-refresh": `${refreshToken}`,
     },
   };
 
   const response = await axios.post(API_URL, productData, config);
+  console.log(response.data);
 
   return response.data;
 };
@@ -24,6 +32,7 @@ const updateProduct = async (
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
+      // "x-refresh": `${refreshToken}`,
     },
   };
 
@@ -56,11 +65,16 @@ const getAllProduct = async () => {
   return res.data;
 };
 
-// Delete user goal
-const deleteProduct = async (productId: string, token: any) => {
+// Delete a product
+const deleteProduct = async (
+  productId: string,
+  accessToken: any,
+  refreshToken: any
+) => {
   const config = {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
+      "x-refresh": `${refreshToken}`,
     },
   };
 

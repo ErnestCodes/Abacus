@@ -5,6 +5,7 @@ import { AdminDocument } from "./admin.models";
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
 export interface ProductInput {
+  adminUser: AdminDocument["_id"];
   title: string;
   description: string;
   image: string;
@@ -28,6 +29,7 @@ const ProductSchema = new mongoose.Schema(
     },
     adminUser: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: "Admin",
     },
     title: {

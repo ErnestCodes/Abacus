@@ -10,8 +10,7 @@ export interface authState {
 }
 
 export interface productState {
-  products: [];
-  allProducts: [];
+  products: any[];
   isProductError: boolean;
   isProductSuccess: boolean;
   isProductLoading: boolean;
