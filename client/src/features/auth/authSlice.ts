@@ -57,7 +57,7 @@ export const login = createAsyncThunk(
   }
 );
 
-// Login user
+// Load user
 export const loadUser = createAsyncThunk(
   "auth/loadUser",
   async (token: { accessToken: string; refreshToken: string }, thunkAPI) => {
