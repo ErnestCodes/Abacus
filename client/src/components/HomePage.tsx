@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
+import { loadingUser } from "../features/user/userSlice";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -26,15 +27,18 @@ function classNames(...classes: string[]) {
 function HomePage() {
   const [open, setOpen] = useState(false);
   const { products } = useSelector((state: any) => state.product);
+  const { user, isSuccess, accessToken, refreshToken } = useSelector(
+    (state: any) => state.user
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(getAllProducts());
+    dispatch(getAllProducts()) as any;
 
-    // return () => {
-    //   dispatch(productReset());
-    // };
-  }, [products, dispatch]);
+    if (isSuccess || accessToken || refreshToken) {
+      dispatch(loadingUser()) as any;
+    }
+  }, [products, user, dispatch]);
 
   return (
     <div className="bg-white">
@@ -181,35 +185,32 @@ function HomePage() {
               </div>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                <div className="flow-root">
-                  <a
-                    href={getGoogleOAuthURL()}
-                    className="-m-2 p-2 block font-medium text-gray-900"
-                  >
-                    Sign in
-                  </a>
-                </div>
-                <div className="flow-root">
-                  <a
-                    href=""
-                    className="-m-2 p-2 block font-medium text-gray-900"
-                  >
-                    Create account
-                  </a>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 py-6 px-4">
-                <a href="#" className="-m-2 p-2 flex items-center">
-                  <img
-                    src="https://tailwindui.com/img/flags/flag-canada.svg"
-                    className="w-5 h-auto block flex-shrink-0"
-                  />
-                  <span className="ml-3 block text-base font-medium text-gray-900">
-                    CAD
-                  </span>
-                  <span className="sr-only">, change currency</span>
-                </a>
+                {user ? (
+                  <div className="flow-root">
+                    <a className="-m-2 p-2 block font-medium text-gray-900">
+                      Hello, {user.name}
+                    </a>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flow-root">
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="-m-2 p-2 block font-medium text-gray-900"
+                      >
+                        Sign in
+                      </a>
+                    </div>
+                    <div className="flow-root">
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="-m-2 p-2 block font-medium text-gray-900"
+                      >
+                        Create account
+                      </a>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </Transition.Child>
@@ -382,27 +383,43 @@ function HomePage() {
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a
-                    href={getGoogleOAuthURL()}
-                    className="text-sm font-medium text-white hover:text-gray-200"
-                  >
-                    Sign in
-                  </a>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a
-                    href={getGoogleOAuthURL()}
-                    className="text-sm font-medium text-white hover:text-gray-200"
-                  >
-                    Create account
-                  </a>
-                  <a
-                    href="./register"
-                    className="text-sm font-medium text-white hover:text-gray-200"
-                  >
-                    Orders
-                  </a>
-                </div>
+                {user ? (
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <a
+                      href={getGoogleOAuthURL()}
+                      className="text-sm font-medium text-white hover:text-gray-200"
+                    >
+                      Hello, {user && user.name}
+                    </a>
+                  </div>
+                ) : (
+                  <>
+                    <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Sign in
+                      </a>
+                      <span
+                        className="h-6 w-px bg-gray-200"
+                        aria-hidden="true"
+                      />
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Create account
+                      </a>
+                      <a
+                        href="./register"
+                        className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Orders
+                      </a>
+                    </div>
+                  </>
+                )}
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
