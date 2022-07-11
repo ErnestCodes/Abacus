@@ -208,6 +208,9 @@ function HomePage() {
                       >
                         Create account
                       </a>
+                      <a className="-m-2 p-2 block font-medium text-gray-900">
+                        Orders
+                      </a>
                     </div>
                   </>
                 )}
@@ -227,7 +230,7 @@ function HomePage() {
             <div className="h-16 flex items-center">
               <button
                 type="button"
-                className="bg-white p-2 rounded-md text-gray-400 lg:hidden"
+                className="text-[#f0c14b] p-2 rounded-md lg:hidden"
                 onClick={() => setOpen(true)}
               >
                 <span className="sr-only">Open menu</span>
@@ -385,10 +388,7 @@ function HomePage() {
               <div className="ml-auto flex items-center">
                 {user ? (
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <a
-                      href={getGoogleOAuthURL()}
-                      className="text-sm font-medium text-white hover:text-gray-200"
-                    >
+                    <a className="text-sm font-medium text-white hover:text-gray-200">
                       Hello, {user && user.name}
                     </a>
                   </div>
@@ -412,7 +412,7 @@ function HomePage() {
                         Create account
                       </a>
                       <a
-                        href="./register"
+                        href="#"
                         className="text-sm font-medium text-white hover:text-gray-200"
                       >
                         Orders

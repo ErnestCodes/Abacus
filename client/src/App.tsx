@@ -6,9 +6,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/Login";
 import HomePage from "./components/HomePage";
-import Register from "./components/Register";
 import routes from "./routes";
 import LoginAdmin from "./components/Admin/Layout/Login.admin";
 import HomeAdmin from "./components/Admin/Home/Home.admin";
@@ -35,8 +33,6 @@ function App() {
       <Router>
         <Routes>
           <Route path={routes.home} element={<HomePage />} />
-          <Route path={routes.login} element={<Login />} />
-          <Route path={routes.register} element={<Register />} />
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
           <Route
             path={routes.dashboard}
