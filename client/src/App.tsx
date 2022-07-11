@@ -6,9 +6,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/Login";
 import HomePage from "./components/HomePage";
-import Register from "./components/Register";
 import routes from "./routes";
 import LoginAdmin from "./components/Admin/Layout/Login.admin";
 import HomeAdmin from "./components/Admin/Home/Home.admin";
@@ -23,6 +21,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./features/auth/authSlice";
 import NewProducts from "./components/Admin/Layout/NewProducts";
+import Cookies from "js-cookie";
+import Orders from "./components/Orders";
 
 injectStyle();
 
@@ -30,14 +30,18 @@ function App() {
   const { isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.auth
   );
+
+  const userAccessToken = Cookies.get("accessToken")
   return (
     <>
       <Router>
         <Routes>
           <Route path={routes.home} element={<HomePage />} />
-          <Route path={routes.login} element={<Login />} />
-          <Route path={routes.register} element={<Register />} />
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
+          <Route
+            path={routes.order}
+            element={userAccessToken ? <Orders /> : <Navigate to="/" />}
+          />
           <Route
             path={routes.dashboard}
             element={accessToken ? <HomeAdmin /> : <Navigate to="/" />}

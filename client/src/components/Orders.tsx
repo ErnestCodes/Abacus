@@ -2,9 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Popover, Transition, Dialog, Tab } from "@headlessui/react";
 import {
   footerNavigation,
-  trendingProducts,
-  collections,
-  favorites,
+  products,
   navigation,
 } from "../utils/data";
 import {
@@ -18,17 +16,14 @@ import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 import { loadingUser } from "../features/user/userSlice";
-import { Link } from "react-router-dom";
-import routes from "../routes";
 import HeroSection from "./HeroSection";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-function HomePage() {
+function Orders() {
   const [open, setOpen] = useState(false);
-  const { products } = useSelector((state: any) => state.product);
   const { user, isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.user
   );
@@ -211,12 +206,12 @@ function HomePage() {
                       >
                         Create account
                       </a>
-                      <Link
-                        to={routes.order}
+                      <a
+                        href="#"
                         className="-m-2 mt-3 p-2 block font-medium text-gray-900"
                       >
                         Orders
-                      </Link>
+                      </a>
                       {/* Cart */}
                           <a href="#" className="group mt-3 -m-2 p-2 flex items-center">
                             <ShoppingBagIcon
@@ -413,12 +408,12 @@ function HomePage() {
                     >
                       Hello, {user && user.name}
                     </a>
-                    <Link
-                      to={routes.order}
+                    <a
+                      href="#"
                       className="text-sm font-medium text-white hover:text-gray-200"
                       >
                         Orders
-                      </Link>
+                      </a>
                   </div>
                 ) : (
                   <>
@@ -439,6 +434,7 @@ function HomePage() {
                       >
                         Create account
                       </a>
+                      
                     </div>
                   </>
                 )}
@@ -468,471 +464,132 @@ function HomePage() {
             </div>
           </div>
         </nav>
-
-        {/* Hero section */}
-        <HeroSection />
       </header>
 
-      <main>
-        {/* Featured section */}
-        {/* <section aria-labelledby="cause-heading">
-          <div className="relative bg-gray-800 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
-            <div className="absolute inset-0 overflow-hidden">
-              <img
-                src="https://tailwindui.com/img/ecommerce-images/home-page-03-feature-section-full-width.jpg"
-                alt=""
-                className="w-full h-full object-center object-cover"
-              />
-            </div>
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gray-900 bg-opacity-50"
-            />
-            <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
-              <h2
-                id="cause-heading"
-                className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
-              >
-                Long-term thinking
-              </h2>
-              <p className="mt-3 text-xl text-white">
-                We're committed to responsible, sustainable, and ethical
-                manufacturing. Our small-scale approach allows us to focus on
-                quality and reduce our impact. We're doing our best to delay the
-                inevitable heat-death of the universe.
-              </p>
-              <a
-                href="#"
-                className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
-              >
-                Read our story
-              </a>
-            </div>
+      <main className="max-w-2xl mx-auto pt-8 pb-24 sm:pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="px-4 space-y-2 sm:px-0 sm:flex sm:items-baseline sm:justify-between sm:space-y-0">
+          <div className="flex sm:items-baseline sm:space-x-4">
+            <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">Order #54879</h1>
           </div>
-        </section> */}
+          <p className="text-sm text-gray-600">
+            Order placed{' '}
+            <time dateTime="2021-03-22" className="font-medium text-gray-900">
+              March 22, 2021
+            </time>
+          </p>
+        </div>
 
-        {/* Trending products */}
-        <section aria-labelledby="trending-heading" className="bg-white">
-          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-32 lg:px-8">
-            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
-              <h2
-                id="trending-heading"
-                className="text-2xl font-extrabold tracking-tight text-gray-900"
-              >
-                Trending shoes
-              </h2>
-              <a
-                href="#"
-                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
-              >
-                See everything<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
+        {/* Products */}
+        <section aria-labelledby="products-heading" className="mt-6">
+          <h2 id="products-heading" className="sr-only">
+            Products purchased
+          </h2>
 
-            <div className="mt-8 relative">
-              <div className="relative w-full overflow-x-auto">
-                <ul
-                  role="list"
-                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
-                >
-                  {products &&
-                    products
-                      .filter((product: any) => product.category == "Shoes")
-                      .map((product: any) => (
-                        <li
-                          key={product._id}
-                          className="w-64 inline-flex flex-col text-center lg:w-auto"
-                        >
-                          <div className="group relative">
-                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
-                              <img
-                                src={product.image}
-                                alt={product.title}
-                                className="w-full h-full object-center object-cover group-hover:opacity-75"
-                              />
-                            </div>
-                            <div className="mt-6">
-                              {/* <p className="text-sm text-gray-500">
-                            {product.color}
-                          </p> */}
-                              <h3 className="mt-1 font-semibold text-gray-900">
-                                <a href={product.href}>
-                                  <span className="absolute inset-0" />
-                                  {product.title}
-                                </a>
-                              </h3>
-                              <p className="mt-1 text-gray-900">
-                                ${product.price}
-                              </p>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
-                          >
-                            Add
-                          </button>
-                          {/* <h4 className="sr-only">Available colors</h4>
-                      <ul
-                        role="list"
-                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
-                      >
-                        {product.availableColors.map((color) => (
-                          <li
-                            key={color.name}
-                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
-                            style={{ backgroundColor: color.colorBg }}
-                          >
-                            <span className="sr-only">{color.name}</span>
-                          </li>
-                        ))}
-                      </ul> */}
-                        </li>
-                      ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* <div className="mt-12 px-4 sm:hidden">
-              <a
-                href="#"
-                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+          <div className="space-y-8">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white border-t border-b border-gray-200 shadow-sm sm:border sm:rounded-lg"
               >
-                See everything<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div> */}
-          </div>
-        </section>
+                <div className="py-6 px-4 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
+                  <div className="sm:flex lg:col-span-7">
+                    <div className="flex-shrink-0 w-full aspect-w-1 aspect-h-1 rounded-lg overflow-hidden sm:aspect-none sm:w-40 sm:h-40">
+                      <img
+                        src={product.imageSrc}
+                        alt={product.imageAlt}
+                        className="w-full h-full object-center object-cover sm:w-full sm:h-full"
+                      />
+                    </div>
 
-        {/* Trending accessories */}
-        <section aria-labelledby="trending-heading" className="bg-white">
-          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-10 lg:px-8">
-            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
-              <h2
-                id="trending-heading"
-                className="text-2xl font-extrabold tracking-tight text-gray-900"
-              >
-                Trending accessories
-              </h2>
-              <a
-                href="#"
-                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
-              >
-                See everything<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
+                    <div className="mt-6 sm:mt-0 sm:ml-6">
+                      <h3 className="text-base font-medium text-gray-900">
+                        <a href={product.href}>{product.name}</a>
+                      </h3>
+                      <p className="mt-2 text-sm font-medium text-gray-900">${product.price}</p>
+                      <p className="mt-3 text-sm text-gray-500">{product.description}</p>
+                    </div>
+                  </div>
 
-            <div className="mt-8 relative">
-              <div className="relative w-full overflow-x-auto">
-                <ul
-                  role="list"
-                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
-                >
-                  {products &&
-                    products
-                      .filter(
-                        (product: any) => product.category == "Accessories"
-                      )
-                      .map((product: any) => (
-                        <li
-                          key={product._id}
-                          className="w-64 inline-flex flex-col text-center lg:w-auto"
-                        >
-                          <div className="group relative">
-                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
-                              <img
-                                src={product.image}
-                                alt={product.title}
-                                className="w-full h-full object-center object-cover group-hover:opacity-75"
-                              />
-                            </div>
-                            <div className="mt-6">
-                              {/* <p className="text-sm text-gray-500">
-                            {product.color}
-                          </p> */}
-                              <h3 className="mt-1 font-semibold text-gray-900">
-                                <a href={product.href}>
-                                  <span className="absolute inset-0" />
-                                  {product.title}
-                                </a>
-                              </h3>
-                              <p className="mt-1 text-gray-900">
-                                ${product.price}
-                              </p>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
-                          >
-                            Add
-                          </button>
-                          {/* <h4 className="sr-only">Available colors</h4>
-                      <ul
-                        role="list"
-                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
-                      >
-                        {product.availableColors.map((color) => (
-                          <li
-                            key={color.name}
-                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
-                            style={{ backgroundColor: color.colorBg }}
-                          >
-                            <span className="sr-only">{color.name}</span>
-                          </li>
-                        ))}
-                      </ul> */}
-                        </li>
-                      ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* <div className="mt-12 px-4 sm:hidden">
-              <a
-                href="#"
-                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                See everything<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div> */}
-          </div>
-        </section>
-
-        {/* Category section */}
-        <section aria-labelledby="category-heading" className="bg-gray-50">
-          <div className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:items-baseline sm:justify-between">
-              <h2
-                id="category-heading"
-                className="text-2xl font-extrabold tracking-tight text-gray-900"
-              >
-                Shop by Category
-              </h2>
-              <a
-                href="#"
-                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
-              >
-                Browse all categories<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
-              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:aspect-h-1 sm:aspect-w-1 sm:row-span-2">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-featured-category.jpg"
-                  alt="Two models wearing women's black cotton crewneck tee and off-white cotton crewneck tee."
-                  className="object-center object-cover group-hover:opacity-75"
-                />
-                <div
-                  aria-hidden="true"
-                  className="bg-gradient-to-b from-transparent to-black opacity-50"
-                />
-                <div className="p-6 flex items-end">
-                  <div>
-                    <h3 className="font-semibold text-white">
-                      <a href="#">
-                        <span className="absolute inset-0" />
-                        New Arrivals
-                      </a>
-                    </h3>
-                    <p aria-hidden="true" className="mt-1 text-sm text-white">
-                      Shop now
-                    </p>
+                  <div className="mt-6 lg:mt-0 lg:col-span-5">
+                    <dl className="grid grid-cols-2 gap-x-6 text-sm">
+                      <div>
+                        <dt className="font-medium text-gray-900">Delivery address</dt>
+                        <dd className="mt-3 text-gray-500">
+                          <span className="block">{product.address[0]}</span>
+                          <span className="block">{product.address[1]}</span>
+                          <span className="block">{product.address[2]}</span>
+                        </dd>
+                      </div>
+                    </dl>
                   </div>
                 </div>
               </div>
-              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
-                <img
-                  src="https://images.unsplash.com/photo-1656078411660-05f2cf994d33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                  alt="Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters."
-                  className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
-                />
-                <div
-                  aria-hidden="true"
-                  className="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0"
-                />
-                <div className="p-6 flex items-end sm:absolute sm:inset-0">
-                  <div>
-                    <h3 className="font-semibold text-white">
-                      <a href="#">
-                        <span className="absolute inset-0" />
-                        Accessories
-                      </a>
-                    </h3>
-                    <p aria-hidden="true" className="mt-1 text-sm text-white">
-                      Shop now
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
-                <img
-                  src="https://images.unsplash.com/photo-1656335362192-2bc9051b1824?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=395&q=80"
-                  alt="Walnut desk organizer set with white modular trays, next to porcelain mug on wooden desk."
-                  className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
-                />
-                <div
-                  aria-hidden="true"
-                  className="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0"
-                />
-                <div className="p-6 flex items-end sm:absolute sm:inset-0">
-                  <div>
-                    <h3 className="font-semibold text-white">
-                      <a href="#">
-                        <span className="absolute inset-0" />
-                        Workspace
-                      </a>
-                    </h3>
-                    <p aria-hidden="true" className="mt-1 text-sm text-white">
-                      Shop now
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 sm:hidden">
-              <a
-                href="#"
-                className="block text-sm font-semibold text-[#f0c14b]"
-              >
-                Browse all categories<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
+            ))}
           </div>
         </section>
 
-        {/* Favorites section */}
-        <section aria-labelledby="favorites-heading">
-          <div className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:items-baseline sm:justify-between">
-              <h2
-                id="favorites-heading"
-                className="text-2xl font-extrabold tracking-tight text-gray-900"
-              >
-                Our Favorites
-              </h2>
-              <a
-                href="#"
-                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
-              >
-                Browse all favorites<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
+        {/* Billing */}
+        <section aria-labelledby="summary-heading" className="mt-16">
+          <h2 id="summary-heading" className="sr-only">
+            Billing Summary
+          </h2>
 
-            <div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-y-0 sm:gap-x-6 lg:gap-x-8">
-              {favorites.map((favorite) => (
-                <div key={favorite.id} className="group relative">
-                  <div className="w-full h-96 rounded-lg overflow-hidden group-hover:opacity-75 sm:h-auto sm:aspect-w-2 sm:aspect-h-3">
-                    <img
-                      src={favorite.imageSrc}
-                      alt={favorite.imageAlt}
-                      className="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-gray-900">
-                    <a href={favorite.href}>
-                      <span className="absolute inset-0" />
-                      {favorite.name}
-                    </a>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{favorite.price}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 sm:hidden">
-              <a
-                href="#"
-                className="block text-sm font-semibold text-[#f0c14b]"
-              >
-                Browse all favorites<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA section */}
-        <section aria-labelledby="sale-heading">
-          <div className="pt-32 overflow-hidden sm:pt-14">
-            <div className="bg-[#f0c14b]">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="relative pt-48 pb-16 sm:pb-24">
-                  <div>
-                    <h2
-                      id="sale-heading"
-                      className="text-4xl font-extrabold tracking-tight text-white md:text-5xl"
+          <div className="bg-gray-100 py-6 px-4 sm:px-6 sm:rounded-lg lg:px-8 lg:py-8 lg:grid lg:grid-cols-12 lg:gap-x-8">
+            <dl className="grid grid-cols-2 gap-6 text-sm sm:grid-cols-2 md:gap-x-8 lg:col-span-7">
+              <div>
+                <dt className="font-medium text-gray-900">Billing address</dt>
+                <dd className="mt-3 text-gray-500">
+                  <span className="block">Floyd Miles</span>
+                  <span className="block">7363 Cynthia Pass</span>
+                  <span className="block">Toronto, ON N3Y 4H8</span>
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-gray-900">Payment information</dt>
+                <dd className="-ml-4 -mt-1 flex flex-wrap">
+                  <div className="ml-4 mt-4 flex-shrink-0">
+                    <svg
+                      aria-hidden="true"
+                      width={36}
+                      height={24}
+                      viewBox="0 0 36 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-auto"
                     >
-                      Final Stock.
-                      <br />
-                      Up to 50% off.
-                    </h2>
-                    <div className="mt-6 text-base">
-                      <a href="#" className="font-semibold text-white">
-                        Shop the sale<span aria-hidden="true"> &rarr;</span>
-                      </a>
-                    </div>
+                      <rect width={36} height={24} rx={4} fill="#224DBA" />
+                      <path
+                        d="M10.925 15.673H8.874l-1.538-6c-.073-.276-.228-.52-.456-.635A6.575 6.575 0 005 8.403v-.231h3.304c.456 0 .798.347.855.75l.798 4.328 2.05-5.078h1.994l-3.076 7.5zm4.216 0h-1.937L14.8 8.172h1.937l-1.595 7.5zm4.101-5.422c.057-.404.399-.635.798-.635a3.54 3.54 0 011.88.346l.342-1.615A4.808 4.808 0 0020.496 8c-1.88 0-3.248 1.039-3.248 2.481 0 1.097.969 1.673 1.653 2.02.74.346 1.025.577.968.923 0 .519-.57.75-1.139.75a4.795 4.795 0 01-1.994-.462l-.342 1.616a5.48 5.48 0 002.108.404c2.108.057 3.418-.981 3.418-2.539 0-1.962-2.678-2.077-2.678-2.942zm9.457 5.422L27.16 8.172h-1.652a.858.858 0 00-.798.577l-2.848 6.924h1.994l.398-1.096h2.45l.228 1.096h1.766zm-2.905-5.482l.57 2.827h-1.596l1.026-2.827z"
+                        fill="#fff"
+                      />
+                    </svg>
+                    <p className="sr-only">Visa</p>
                   </div>
-
-                  <div className="absolute -top-32 left-1/2 transform -translate-x-1/2 sm:top-6 sm:translate-x-0">
-                    <div className="ml-24 flex space-x-6 min-w-max sm:ml-3 lg:space-x-8">
-                      <div className="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
-                        <div className="flex-shrink-0">
-                          <img
-                            className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72"
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg"
-                            alt=""
-                          />
-                        </div>
-
-                        <div className="mt-6 flex-shrink-0 sm:mt-0">
-                          <img
-                            className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72"
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-02.jpg"
-                            alt=""
-                          />
-                        </div>
-                      </div>
-                      <div className="flex space-x-6 sm:-mt-20 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
-                        <div className="flex-shrink-0">
-                          <img
-                            className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72"
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-favorite-01.jpg"
-                            alt=""
-                          />
-                        </div>
-
-                        <div className="mt-6 flex-shrink-0 sm:mt-0">
-                          <img
-                            className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72"
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-favorite-02.jpg"
-                            alt=""
-                          />
-                        </div>
-                      </div>
-                      <div className="flex space-x-6 sm:flex-col sm:space-x-0 sm:space-y-6 lg:space-y-8">
-                        <div className="flex-shrink-0">
-                          <img
-                            className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72"
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg"
-                            alt=""
-                          />
-                        </div>
-
-                        <div className="mt-6 flex-shrink-0 sm:mt-0">
-                          <img
-                            className="h-64 w-64 rounded-lg object-cover md:h-72 md:w-72"
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-02.jpg"
-                            alt=""
-                          />
-                        </div>
-                      </div>
-                    </div>
+                  <div className="ml-4 mt-4">
+                    <p className="text-gray-900">Ending with 4242</p>
+                    <p className="text-gray-600">Expires 02 / 24</p>
                   </div>
-                </div>
+                </dd>
               </div>
-            </div>
+            </dl>
+
+            <dl className="mt-8 divide-y divide-gray-200 text-sm lg:mt-0 lg:col-span-5">
+              <div className="pb-4 flex items-center justify-between">
+                <dt className="text-gray-600">Subtotal</dt>
+                <dd className="font-medium text-gray-900">$72</dd>
+              </div>
+              <div className="py-4 flex items-center justify-between">
+                <dt className="text-gray-600">Shipping</dt>
+                <dd className="font-medium text-gray-900">$5</dd>
+              </div>
+              <div className="py-4 flex items-center justify-between">
+                <dt className="text-gray-600">Tax</dt>
+                <dd className="font-medium text-gray-900">$6.16</dd>
+              </div>
+              <div className="pt-4 flex items-center justify-between">
+                <dt className="font-medium text-gray-900">Order total</dt>
+                <dd className="font-medium text-indigo-600">$83.16</dd>
+              </div>
+            </dl>
           </div>
         </section>
       </main>
@@ -1050,4 +707,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Orders;
