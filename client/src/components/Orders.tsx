@@ -16,6 +16,8 @@ import { getAllProducts } from "../features/products/productSlice";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 import { loadingUser } from "../features/user/userSlice";
 import FooterSection from "./FooterSection";
+import { Link } from "react-router-dom";
+import routes from "../routes";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -407,12 +409,12 @@ function Orders() {
                     >
                       Hello, {user && user.name}
                     </a>
-                    <a
-                      href="#"
+                    <Link
+                      to={routes.order}
                       className="text-sm font-medium text-white hover:text-gray-200"
                       >
                         Orders
-                      </a>
+                    </Link>
                   </div>
                 ) : (
                   <>
@@ -448,7 +450,7 @@ function Orders() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 p-2 flex items-center">
+                  <Link to={routes.cart} className="group -m-2 p-2 flex items-center">
                     <ShoppingBagIcon
                       className="flex-shrink-0 h-6 w-6 text-gray-200"
                       aria-hidden="true"
@@ -457,7 +459,7 @@ function Orders() {
                       0
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

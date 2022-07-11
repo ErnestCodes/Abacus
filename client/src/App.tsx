@@ -23,6 +23,7 @@ import { loadUser } from "./features/auth/authSlice";
 import NewProducts from "./components/Admin/Layout/NewProducts";
 import Cookies from "js-cookie";
 import Orders from "./components/Orders";
+import Cart from "./components/Cart";
 
 injectStyle();
 
@@ -41,6 +42,10 @@ function App() {
           <Route
             path={routes.order}
             element={userAccessToken ? <Orders /> : <Navigate to="/" />}
+          />
+          <Route
+            path={routes.cart}
+            element={userAccessToken ? <Cart /> : <Navigate to="/" />}
           />
           <Route
             path={routes.dashboard}

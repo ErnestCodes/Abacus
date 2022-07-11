@@ -216,7 +216,7 @@ function HomePage() {
                         Orders
                       </Link>
                       {/* Cart */}
-                          <a href="#" className="group mt-3 -m-2 p-2 flex items-center">
+                          <Link to={routes.cart} className="group mt-3 -m-2 p-2 flex items-center">
                             <ShoppingBagIcon
                               className="flex-shrink-0 h-6 w-6 text-gray-900"
                               aria-hidden="true"
@@ -225,7 +225,7 @@ function HomePage() {
                               0
                             </span>
                             <span className="sr-only">items in cart, view bag</span>
-                          </a>
+                          </Link>
                     </div>
                   </>
                 )}
@@ -451,7 +451,7 @@ function HomePage() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 p-2 flex items-center">
+                  <Link to={routes.cart} className="group -m-2 p-2 flex items-center">
                     <ShoppingBagIcon
                       className="flex-shrink-0 h-6 w-6 text-gray-200"
                       aria-hidden="true"
@@ -460,7 +460,7 @@ function HomePage() {
                       0
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
