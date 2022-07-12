@@ -19,6 +19,7 @@ import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 import { loadingUser } from "../features/user/userSlice";
+import { toast } from "react-toastify";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -39,6 +40,15 @@ function HomePage() {
       dispatch(loadingUser()) as any;
     }
   }, [products, user, dispatch]);
+
+  const addToCart = () => {
+    console.log("clicked");
+    if (!accessToken) {
+      toast.error("Please sign up");
+    }
+
+    toast.success("added to cart");
+  };
 
   return (
     <div className="bg-white">
@@ -633,7 +643,11 @@ function HomePage() {
                             </div>
                           </div>
                           <button
-                            type="button"
+                            // type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart();
+                            }}
                             className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
                           >
                             Add
