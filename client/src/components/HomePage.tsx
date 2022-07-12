@@ -1,9 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Popover, Transition, Dialog, Tab } from "@headlessui/react";
 import {
-  footerNavigation,
-  trendingProducts,
-  collections,
   favorites,
   navigation,
 } from "../utils/data";
@@ -13,7 +10,15 @@ import {
   ShoppingBagIcon,
   XIcon,
 } from "@heroicons/react/outline";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../app/store";
+import { getAllProducts } from "../features/products/productSlice";
+import getGoogleOAuthURL from "../utils/getGoogleUrl";
+import { loadingUser } from "../features/user/userSlice";
 import { Link } from "react-router-dom";
+import routes from "../routes";
+import HeroSection from "./HeroSection";
+import FooterSection from "./FooterSection";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -21,10 +26,25 @@ function classNames(...classes: string[]) {
 
 function HomePage() {
   const [open, setOpen] = useState(false);
+  const { products } = useSelector((state: any) => state.product);
+  const { user, isSuccess, accessToken, refreshToken } = useSelector(
+    (state: any) => state.user
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(getAllProducts()) as any;
+
+    if (isSuccess || accessToken || refreshToken) {
+      dispatch(loadingUser()) as any;
+    }
+  }, [products, user, dispatch]);
+
   return (
     <div className="bg-white">
       {/* Mobile menu */}
 
+      {/** Mobile Navigation */}
       {/* <Header /> */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -166,52 +186,68 @@ function HomePage() {
               </div>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                <div className="flow-root">
-                  <Link
-                    to="login"
-                    className="-m-2 p-2 block font-medium text-gray-900"
-                  >
-                    Sign in
-                  </Link>
-                </div>
-                <div className="flow-root">
-                  <Link
-                    to="register"
-                    className="-m-2 p-2 block font-medium text-gray-900"
-                  >
-                    Create account
-                  </Link>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 py-6 px-4">
-                <a href="#" className="-m-2 p-2 flex items-center">
-                  <img
-                    src="https://tailwindui.com/img/flags/flag-canada.svg"
-                    className="w-5 h-auto block flex-shrink-0"
-                  />
-                  <span className="ml-3 block text-base font-medium text-gray-900">
-                    CAD
-                  </span>
-                  <span className="sr-only">, change currency</span>
-                </a>
+                {user ? (
+                  <div className="flow-root">
+                    <a className="-m-2 p-2 block font-medium text-gray-900">
+                      Hello, {user && user.name}
+                    </a>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flow-root">
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="-m-2 p-2 block font-medium text-gray-900"
+                      >
+                        Sign in
+                      </a>
+                    </div>
+                    <div className="flow-root">
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="-m-2 p-2 block font-medium text-gray-900"
+                      >
+                        Create account
+                      </a>
+                      <Link
+                        to={routes.order}
+                        className="-m-2 mt-3 p-2 block font-medium text-gray-900"
+                      >
+                        Orders
+                      </Link>
+                      {/* Cart */}
+                          <Link to={routes.cart} className="group mt-3 -m-2 p-2 flex items-center">
+                            <ShoppingBagIcon
+                              className="flex-shrink-0 h-6 w-6 text-gray-900"
+                              aria-hidden="true"
+                            />
+                            <span className="ml-2 text-sm font-medium text-gray-900">
+                              0
+                            </span>
+                            <span className="sr-only">items in cart, view bag</span>
+                          </Link>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </Transition.Child>
         </Dialog>
       </Transition.Root>
 
+      {/** Main Navigation */}
+
       <header className="relative overflow-hidden">
         {/* Top navigation */}
         <nav
           aria-label="Top"
-          className="relative z-20 bg-white bg-opacity-90 backdrop-filter backdrop-blur-xl"
+          className="relative z-20 bg-black bg-opacity-90 backdrop-filter backdrop-blur-xl"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="h-16 flex items-center">
               <button
                 type="button"
-                className="bg-white p-2 rounded-md text-gray-400 lg:hidden"
+                className="p-2 rounded-md text-[#f0c14b] lg:hidden"
                 onClick={() => setOpen(true)}
               >
                 <span className="sr-only">Open menu</span>
@@ -219,12 +255,12 @@ function HomePage() {
               </button>
 
               {/* Logo */}
-              <div className="ml-4 flex lg:ml-0">
+              <div className="ml-4 mb-3 flex lg:ml-0">
                 <a href="#">
                   <span className="sr-only">Workflow</span>
                   <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
+                    className="h-14 w-auto"
+                    src="https://abacus-47e6d.web.app/img/abacus223.png"
                     alt=""
                   />
                 </a>
@@ -242,7 +278,7 @@ function HomePage() {
                               className={classNames(
                                 open
                                   ? "border-indigo-600 text-indigo-600"
-                                  : "border-transparent text-gray-700 hover:text-gray-800",
+                                  : "border-transparent text-white",
                                 "relative z-10 flex items-center transition-colors ease-out duration-200 text-sm font-medium border-b-2 -mb-px pt-px"
                               )}
                             >
@@ -358,7 +394,7 @@ function HomePage() {
                     <a
                       key={page.name}
                       href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
+                      className="flex items-center text-sm font-medium text-white"
                     >
                       {page.name}
                     </a>
@@ -367,40 +403,47 @@ function HomePage() {
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a
-                    href="./login"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                  >
-                    Sign in
-                  </a>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a
-                    href="./register"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                  >
-                    Create account
-                  </a>
-                </div>
-
-                <div className="hidden lg:ml-8 lg:flex">
-                  <a
-                    href="#"
-                    className="text-gray-700 hover:text-gray-800 flex items-center"
-                  >
-                    <img
-                      src="https://tailwindui.com/img/flags/flag-canada.svg"
-                      alt=""
-                      className="w-5 h-auto block flex-shrink-0"
-                    />
-                    <span className="ml-3 block text-sm font-medium">CAD</span>
-                    <span className="sr-only">, change currency</span>
-                  </a>
-                </div>
+                {user ? (
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <a
+                      href={getGoogleOAuthURL()}
+                      className="text-sm font-medium text-white hover:text-gray-200"
+                    >
+                      Hello, {user && user.name}
+                    </a>
+                    <Link
+                      to={routes.order}
+                      className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Orders
+                      </Link>
+                  </div>
+                ) : (
+                  <>
+                    <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Sign in
+                      </a>
+                      <span
+                        className="h-6 w-px bg-gray-200"
+                        aria-hidden="true"
+                      />
+                      <a
+                        href={getGoogleOAuthURL()}
+                        className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Create account
+                      </a>
+                    </div>
+                  </>
+                )}
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
+                  <a href="#" className="p-2 text-gray-200">
                     <span className="sr-only">Search</span>
                     <SearchIcon className="w-6 h-6" aria-hidden="true" />
                   </a>
@@ -408,16 +451,16 @@ function HomePage() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 p-2 flex items-center">
+                  <Link to={routes.cart} className="group -m-2 p-2 flex items-center">
                     <ShoppingBagIcon
-                      className="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                      className="flex-shrink-0 h-6 w-6 text-gray-200"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                    <span className="ml-2 text-sm font-medium text-gray-200">
                       0
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -425,204 +468,12 @@ function HomePage() {
         </nav>
 
         {/* Hero section */}
-        <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48 bg-gradient-to-r from-white to-black ">
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:static">
-            <div className="sm:max-w-lg">
-              <h1 className="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-                Summer styles are finally here
-              </h1>
-              <p className="mt-4 text-xl text-gray-500">
-                This year, our new summer collection will shelter you from the
-                harsh elements of a world that doesn't care if you live or die.
-              </p>
-            </div>
-            <div>
-              <div className="mt-10">
-                {/* Decorative image grid */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none lg:absolute lg:inset-y-0 lg:max-w-7xl lg:mx-auto lg:w-full"
-                >
-                  <div className="absolute transform sm:left-1/2 sm:top-0 sm:translate-x-8 lg:left-1/2 lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-8">
-                    <div className="flex items-center space-x-6 lg:space-x-8">
-                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
-                        <div className="w-44 h-64 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-02.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-03.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-04.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-05.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-06.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-07.jpg"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <a
-                  href="#"
-                  className="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
-                >
-                  Shop Collection
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <HeroSection />
       </header>
 
       <main>
-        {/* Category section */}
-        <section aria-labelledby="category-heading" className="bg-gray-50">
-          <div className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:items-baseline sm:justify-between">
-              <h2
-                id="category-heading"
-                className="text-2xl font-extrabold tracking-tight text-gray-900"
-              >
-                Shop by Category
-              </h2>
-              <a
-                href="#"
-                className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block"
-              >
-                Browse all categories<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
-              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:aspect-h-1 sm:aspect-w-1 sm:row-span-2">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-featured-category.jpg"
-                  alt="Two models wearing women's black cotton crewneck tee and off-white cotton crewneck tee."
-                  className="object-center object-cover group-hover:opacity-75"
-                />
-                <div
-                  aria-hidden="true"
-                  className="bg-gradient-to-b from-transparent to-black opacity-50"
-                />
-                <div className="p-6 flex items-end">
-                  <div>
-                    <h3 className="font-semibold text-white">
-                      <a href="#">
-                        <span className="absolute inset-0" />
-                        New Arrivals
-                      </a>
-                    </h3>
-                    <p aria-hidden="true" className="mt-1 text-sm text-white">
-                      Shop now
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg"
-                  alt="Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters."
-                  className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
-                />
-                <div
-                  aria-hidden="true"
-                  className="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0"
-                />
-                <div className="p-6 flex items-end sm:absolute sm:inset-0">
-                  <div>
-                    <h3 className="font-semibold text-white">
-                      <a href="#">
-                        <span className="absolute inset-0" />
-                        Accessories
-                      </a>
-                    </h3>
-                    <p aria-hidden="true" className="mt-1 text-sm text-white">
-                      Shop now
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-02.jpg"
-                  alt="Walnut desk organizer set with white modular trays, next to porcelain mug on wooden desk."
-                  className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
-                />
-                <div
-                  aria-hidden="true"
-                  className="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0"
-                />
-                <div className="p-6 flex items-end sm:absolute sm:inset-0">
-                  <div>
-                    <h3 className="font-semibold text-white">
-                      <a href="#">
-                        <span className="absolute inset-0" />
-                        Workspace
-                      </a>
-                    </h3>
-                    <p aria-hidden="true" className="mt-1 text-sm text-white">
-                      Shop now
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 sm:hidden">
-              <a
-                href="#"
-                className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Browse all categories<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
-          </div>
-        </section>
-
         {/* Featured section */}
-        <section aria-labelledby="cause-heading">
+        {/* <section aria-labelledby="cause-heading">
           <div className="relative bg-gray-800 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
             <div className="absolute inset-0 overflow-hidden">
               <img
@@ -656,7 +507,7 @@ function HomePage() {
               </a>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Trending products */}
         <section aria-labelledby="trending-heading" className="bg-white">
@@ -666,11 +517,11 @@ function HomePage() {
                 id="trending-heading"
                 className="text-2xl font-extrabold tracking-tight text-gray-900"
               >
-                Trending products
+                Trending shoes
               </h2>
               <a
                 href="#"
-                className="hidden sm:block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
               >
                 See everything<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -682,34 +533,44 @@ function HomePage() {
                   role="list"
                   className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
                 >
-                  {trendingProducts.map((product) => (
-                    <li
-                      key={product.id}
-                      className="w-64 inline-flex flex-col text-center lg:w-auto"
-                    >
-                      <div className="group relative">
-                        <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
-                          <img
-                            src={product.imageSrc}
-                            alt={product.imageAlt}
-                            className="w-full h-full object-center object-cover group-hover:opacity-75"
-                          />
-                        </div>
-                        <div className="mt-6">
-                          <p className="text-sm text-gray-500">
+                  {products &&
+                    products
+                      .filter((product: any) => product.category == "Shoes")
+                      .map((product: any) => (
+                        <li
+                          key={product._id}
+                          className="w-64 inline-flex flex-col text-center lg:w-auto"
+                        >
+                          <div className="group relative">
+                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                className="w-full h-full object-center object-cover group-hover:opacity-75"
+                              />
+                            </div>
+                            <div className="mt-6">
+                              {/* <p className="text-sm text-gray-500">
                             {product.color}
-                          </p>
-                          <h3 className="mt-1 font-semibold text-gray-900">
-                            <a href={product.href}>
-                              <span className="absolute inset-0" />
-                              {product.name}
-                            </a>
-                          </h3>
-                          <p className="mt-1 text-gray-900">{product.price}</p>
-                        </div>
-                      </div>
-
-                      <h4 className="sr-only">Available colors</h4>
+                          </p> */}
+                              <h3 className="mt-1 font-semibold text-gray-900">
+                                <a href={product.href}>
+                                  <span className="absolute inset-0" />
+                                  {product.title}
+                                </a>
+                              </h3>
+                              <p className="mt-1 text-gray-900">
+                                ${product.price}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
+                          >
+                            Add
+                          </button>
+                          {/* <h4 className="sr-only">Available colors</h4>
                       <ul
                         role="list"
                         className="mt-auto pt-6 flex items-center justify-center space-x-3"
@@ -723,57 +584,219 @@ function HomePage() {
                             <span className="sr-only">{color.name}</span>
                           </li>
                         ))}
-                      </ul>
-                    </li>
-                  ))}
+                      </ul> */}
+                        </li>
+                      ))}
                 </ul>
               </div>
             </div>
 
-            <div className="mt-12 px-4 sm:hidden">
+            {/* <div className="mt-12 px-4 sm:hidden">
               <a
                 href="#"
                 className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 See everything<span aria-hidden="true"> &rarr;</span>
               </a>
-            </div>
+            </div> */}
           </div>
         </section>
 
-        {/* Collections */}
-        <section aria-labelledby="collections-heading" className="bg-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto py-16 sm:py-24 lg:py-32 lg:max-w-none">
+        {/* Trending accessories */}
+        <section aria-labelledby="trending-heading" className="bg-white">
+          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-10 lg:px-8">
+            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
               <h2
-                id="collections-heading"
-                className="text-2xl font-extrabold text-gray-900"
+                id="trending-heading"
+                className="text-2xl font-extrabold tracking-tight text-gray-900"
               >
-                Collections
+                Trending accessories
               </h2>
+              <a
+                href="#"
+                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
+              >
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div>
 
-              <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
-                {collections.map((collection) => (
-                  <div key={collection.name} className="group relative">
-                    <div className="relative w-full h-80 bg-white rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
-                      <img
-                        src={collection.imageSrc}
-                        alt={collection.imageAlt}
-                        className="w-full h-full object-center object-cover"
-                      />
-                    </div>
-                    <h3 className="mt-6 text-sm text-gray-500">
-                      <a href={collection.href}>
+            <div className="mt-8 relative">
+              <div className="relative w-full overflow-x-auto">
+                <ul
+                  role="list"
+                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
+                >
+                  {products &&
+                    products
+                      .filter(
+                        (product: any) => product.category == "Accessories"
+                      )
+                      .map((product: any) => (
+                        <li
+                          key={product._id}
+                          className="w-64 inline-flex flex-col text-center lg:w-auto"
+                        >
+                          <div className="group relative">
+                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                className="w-full h-full object-center object-cover group-hover:opacity-75"
+                              />
+                            </div>
+                            <div className="mt-6">
+                              {/* <p className="text-sm text-gray-500">
+                            {product.color}
+                          </p> */}
+                              <h3 className="mt-1 font-semibold text-gray-900">
+                                <a href={product.href}>
+                                  <span className="absolute inset-0" />
+                                  {product.title}
+                                </a>
+                              </h3>
+                              <p className="mt-1 text-gray-900">
+                                ${product.price}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
+                          >
+                            Add
+                          </button>
+                          {/* <h4 className="sr-only">Available colors</h4>
+                      <ul
+                        role="list"
+                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
+                      >
+                        {product.availableColors.map((color) => (
+                          <li
+                            key={color.name}
+                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
+                            style={{ backgroundColor: color.colorBg }}
+                          >
+                            <span className="sr-only">{color.name}</span>
+                          </li>
+                        ))}
+                      </ul> */}
+                        </li>
+                      ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* <div className="mt-12 px-4 sm:hidden">
+              <a
+                href="#"
+                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div> */}
+          </div>
+        </section>
+
+        {/* Category section */}
+        <section aria-labelledby="category-heading" className="bg-gray-50">
+          <div className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+            <div className="sm:flex sm:items-baseline sm:justify-between">
+              <h2
+                id="category-heading"
+                className="text-2xl font-extrabold tracking-tight text-gray-900"
+              >
+                Shop by Category
+              </h2>
+              <a
+                href="#"
+                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
+              >
+                Browse all categories<span aria-hidden="true"> &rarr;</span>
+              </a>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
+              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:aspect-h-1 sm:aspect-w-1 sm:row-span-2">
+                <img
+                  src="https://tailwindui.com/img/ecommerce-images/home-page-03-featured-category.jpg"
+                  alt="Two models wearing women's black cotton crewneck tee and off-white cotton crewneck tee."
+                  className="object-center object-cover group-hover:opacity-75"
+                />
+                <div
+                  aria-hidden="true"
+                  className="bg-gradient-to-b from-transparent to-black opacity-50"
+                />
+                <div className="p-6 flex items-end">
+                  <div>
+                    <h3 className="font-semibold text-white">
+                      <a href="#">
                         <span className="absolute inset-0" />
-                        {collection.name}
+                        New Arrivals
                       </a>
                     </h3>
-                    <p className="text-base font-semibold text-gray-900">
-                      {collection.description}
+                    <p aria-hidden="true" className="mt-1 text-sm text-white">
+                      Shop now
                     </p>
                   </div>
-                ))}
+                </div>
               </div>
+              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
+                <img
+                  src="https://images.unsplash.com/photo-1656078411660-05f2cf994d33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                  alt="Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters."
+                  className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
+                />
+                <div
+                  aria-hidden="true"
+                  className="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0"
+                />
+                <div className="p-6 flex items-end sm:absolute sm:inset-0">
+                  <div>
+                    <h3 className="font-semibold text-white">
+                      <a href="#">
+                        <span className="absolute inset-0" />
+                        Accessories
+                      </a>
+                    </h3>
+                    <p aria-hidden="true" className="mt-1 text-sm text-white">
+                      Shop now
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
+                <img
+                  src="https://images.unsplash.com/photo-1656335362192-2bc9051b1824?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=395&q=80"
+                  alt="Walnut desk organizer set with white modular trays, next to porcelain mug on wooden desk."
+                  className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
+                />
+                <div
+                  aria-hidden="true"
+                  className="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0"
+                />
+                <div className="p-6 flex items-end sm:absolute sm:inset-0">
+                  <div>
+                    <h3 className="font-semibold text-white">
+                      <a href="#">
+                        <span className="absolute inset-0" />
+                        Workspace
+                      </a>
+                    </h3>
+                    <p aria-hidden="true" className="mt-1 text-sm text-white">
+                      Shop now
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 sm:hidden">
+              <a
+                href="#"
+                className="block text-sm font-semibold text-[#f0c14b]"
+              >
+                Browse all categories<span aria-hidden="true"> &rarr;</span>
+              </a>
             </div>
           </div>
         </section>
@@ -790,7 +813,7 @@ function HomePage() {
               </h2>
               <a
                 href="#"
-                className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block"
+                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
               >
                 Browse all favorites<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -820,7 +843,7 @@ function HomePage() {
             <div className="mt-6 sm:hidden">
               <a
                 href="#"
-                className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+                className="block text-sm font-semibold text-[#f0c14b]"
               >
                 Browse all favorites<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -831,7 +854,7 @@ function HomePage() {
         {/* CTA section */}
         <section aria-labelledby="sale-heading">
           <div className="pt-32 overflow-hidden sm:pt-14">
-            <div className="bg-gray-800">
+            <div className="bg-[#f0c14b]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative pt-48 pb-16 sm:pb-24">
                   <div>
@@ -911,116 +934,8 @@ function HomePage() {
           </div>
         </section>
       </main>
-
-      <footer aria-labelledby="footer-heading" className="bg-gray-800">
-        <h2 id="footer-heading" className="sr-only">
-          Footer
-        </h2>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
-            <div className="grid grid-cols-2 gap-8 xl:col-span-2">
-              <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-300">Shop</h3>
-                  <ul role="list" className="mt-6 space-y-6">
-                    {footerNavigation.shop.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a
-                          href={item.href}
-                          className="text-white hover:text-gray-600"
-                        >
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-300">Company</h3>
-                  <ul role="list" className="mt-6 space-y-6">
-                    {footerNavigation.company.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a
-                          href={item.href}
-                          className="text-white hover:text-gray-600"
-                        >
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-300">Account</h3>
-                  <ul role="list" className="mt-6 space-y-6">
-                    {footerNavigation.account.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a
-                          href={item.href}
-                          className="text-white hover:text-gray-600"
-                        >
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-300">Connect</h3>
-                  <ul role="list" className="mt-6 space-y-6">
-                    {footerNavigation.connect.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a
-                          href={item.href}
-                          className="text-white hover:text-gray-600"
-                        >
-                          {item.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="mt-16 md:mt-16 xl:mt-0">
-              <h3 className="text-sm font-medium text-gray-300">
-                Sign up for our newsletter
-              </h3>
-              <p className="mt-6 text-sm text-white">
-                The latest deals and savings, sent to your inbox weekly.
-              </p>
-              <form className="mt-2 flex sm:max-w-md">
-                <label htmlFor="email-address" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="email-address"
-                  type="text"
-                  autoComplete="email"
-                  required
-                  className="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base text-indigo-500 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                />
-                <div className="ml-4 flex-shrink-0">
-                  <button
-                    type="submit"
-                    className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Sign up
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 py-10">
-            <p className="text-sm text-gray-300">
-              Copyright &copy; 2022 Ares Inc.
-            </p>
-          </div>
-        </div>
-      </footer>
+  
+      <FooterSection />
     </div>
   );
 }

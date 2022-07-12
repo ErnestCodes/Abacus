@@ -8,8 +8,8 @@ export interface ProductInput {
   adminUser: AdminDocument["_id"];
   title: string;
   description: string;
+  image: string;
   price: string;
-  image: object;
   category: string;
 }
 
@@ -29,6 +29,7 @@ const ProductSchema = new mongoose.Schema(
     },
     adminUser: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: "Admin",
     },
     title: {
@@ -44,7 +45,7 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-      type: Object,
+      type: String,
       required: true,
     },
     category: {

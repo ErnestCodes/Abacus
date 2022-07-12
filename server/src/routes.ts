@@ -3,7 +3,6 @@ import {
   createAdminUserSessionHandler,
   deleteAdminSessionHandler,
   getAdminUserSessionHandler,
-  googleOauthHandler,
 } from "./controller/session.controller";
 import {
   getCurrentUser,
@@ -18,6 +17,7 @@ import { fileFilter, storage } from "./utils/imageUpload";
 import {
   createProductHandler,
   deleteProductHandler,
+  getAllProducts,
   getProductHandler,
   updateProductHandler,
 } from "./controller/product.controller";
@@ -27,6 +27,7 @@ import {
   getProductSchema,
   updateProductSchema,
 } from "./schema/product.schema";
+import { googleOauthHandler } from "./controller/userSession.controller";
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
@@ -63,12 +64,14 @@ function routes(app: Express) {
   app.post(
     "/api/products",
     [
-      upload.single("image"),
+      // upload.single("image"),
       requireUser,
       validateResource(createProductSchema),
     ],
     createProductHandler
   );
+
+  app.get("/api/products", getAllProducts);
 
   app.put(
     "/api/products/:productId",

@@ -4,30 +4,19 @@ import setAuthToken from "../../utils/setAuthToken";
 
 const API_URL = "/api/sessions/";
 
-// // Register user
-// const register = async (userData: []) => {
-//   const response = await axios.post(API_URL, userData);
-
-//   if (response.data) {
-//     console.log(response.data);
-//     // localStorage.setItem('user', JSON.stringify(response.data))
-//   }
-
-//   return response.data;
-// };
 // LoadUser
-const loadUser = async (token: any) => {
+const loadUser = async (accessToken: any, refreshToken: any) => {
   const config = {
     headers: {
-      Authorization: `Bearer ${token.accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
+      "x-refresh": `${refreshToken}`,
     },
   };
   try {
     const res = await axios.get("/api/me", config);
-    // console.log(res.data);
     return res.data;
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 };
 
@@ -36,16 +25,36 @@ const login = async (userData: object) => {
   const response = await axios.post(API_URL, userData);
 
   if (response.data) {
-    setAuthToken(response.data);
-    localStorage.setItem("token", JSON.stringify(response.data));
+    localStorage.setItem(
+      "accessToken",
+      JSON.stringify(response.data.accessToken)
+    );
+    localStorage.setItem(
+      "refreshToken",
+      JSON.stringify(response.data.refreshToken)
+    );
   }
 
   return response.data;
 };
 
 // Logout user
-const logout = () => {
-  localStorage.removeItem("token");
+const logout = async (accessToken: any, refreshToken: any) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "x-refresh": `${refreshToken}`,
+    },
+  };
+  try {
+    const res = await axios.delete(API_URL, config);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  }
 };
 
 const authService = {

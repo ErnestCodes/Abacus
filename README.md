@@ -1,5 +1,5 @@
 
-# Aries: crypto shopping platform
+# Aries: shopping platform
 
 This is an e-commerce application that allow users to shop online with any crypto currency.
 

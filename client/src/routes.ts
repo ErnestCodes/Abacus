@@ -7,4 +7,6 @@ export default {
   users: "/admin_$303248732/dashboard/users",
   products: "/admin_$303248732/dashboard/products",
   new: "/admin_$303248732/dashboard/new",
+  order: "/orders",
+  cart: "/cart"
 };

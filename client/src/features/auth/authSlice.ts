@@ -7,10 +7,14 @@ import {
 import type { RootState } from "../../app/store";
 import { authState } from "../../interface";
 import authService from "./authService";
-const user = JSON.parse(localStorage.getItem("token") as string);
+const user = JSON.parse(localStorage.getItem("user") as string);
+const accessToken = JSON.parse(localStorage.getItem("accessToken") as string);
+const refreshToken = JSON.parse(localStorage.getItem("refreshToken") as string);
 
 const initialState: authState = {
   user: user ? user : null,
+  accessToken: accessToken ? accessToken : null,
+  refreshToken: refreshToken ? refreshToken : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -53,12 +57,12 @@ export const login = createAsyncThunk(
   }
 );
 
-// Login user
+// Load user
 export const loadUser = createAsyncThunk(
   "auth/loadUser",
-  async (token: object, thunkAPI) => {
+  async (token: { accessToken: string; refreshToken: string }, thunkAPI) => {
     try {
-      return await authService.loadUser(token);
+      return await authService.loadUser(token.accessToken, token.refreshToken);
     } catch (error: any) {
       const message =
         (error.response &&
@@ -71,9 +75,12 @@ export const loadUser = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await authService.logout();
-});
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (token: { accessToken: string; refreshToken: string }) => {
+    await authService.logout(token.accessToken, token.refreshToken);
+  }
+);
 
 export const authSlice = createSlice({
   name: "auth",
@@ -92,9 +99,11 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<object>) => {
+        const { accessToken, refreshToken } = action.payload as any;
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.accessToken = accessToken;
+        state.refreshToken = refreshToken;
       })
       .addCase(login.rejected, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
@@ -103,6 +112,22 @@ export const authSlice = createSlice({
         state.user = null;
       })
       .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+      })
+      .addCase(loadUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loadUser.fulfilled, (state, action: PayloadAction<object>) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(loadUser.rejected, (state, action: PayloadAction<any>) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
         state.user = null;
       });
   },

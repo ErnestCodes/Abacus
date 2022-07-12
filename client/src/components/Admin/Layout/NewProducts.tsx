@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -22,18 +22,12 @@ import {
   SearchIcon,
 } from "@heroicons/react/solid";
 import routes from "../../../routes";
-import { loadUser, logout, reset } from "../../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../../app/store";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { createProduct } from "../../../features/products/productSlice";
 import { toast } from "react-toastify";
-import {
-  deleteProduct,
-  getAllProducts,
-  productReset,
-} from "../../../features/products/productSlice";
-import truncate from "../../../utils/truncate";
+import { AppDispatch } from "../../../app/store";
+import { logout, reset } from "../../../features/auth/authSlice";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -48,7 +42,7 @@ const navigation = [
     name: "Products",
     href: routes.products,
     icon: ShoppingBagIcon,
-    current: true,
+    current: false,
   },
   { name: "Settings", href: "#", icon: CogIcon, current: false },
 ];
@@ -75,45 +69,52 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Products() {
+function NewProducts() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { products } = useSelector((state: any) => state.product);
+  const [formData, setFormData] = useState({
+    title: "",
+    price: "",
+    description: "",
+    category: "",
+    image: "",
+  });
 
-  const {
-    user,
-    isLoading,
-    accessToken,
-    refreshToken,
-    isError,
-    isSuccess,
-    message,
-  } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
+  const { user, accessToken, refreshToken } = useSelector(
+    (state: any) => state.auth
+  );
+
+  const { title, image, price, description, category } = formData;
+  //   console.log(selectedFile);
   const navigate = useNavigate();
+  const { isProductSuccess } = useSelector((state: any) => state.product);
 
-  useEffect(() => {
-    dispatch(getAllProducts());
+  const onChange = (e: any) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-    // return () => {
-    //   dispatch(productReset());
-    // };
-  }, [products, dispatch]);
+  const onSubmit = (e: any) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
+    const productData = {
+      title,
+      price,
+      description,
+      image,
+      category,
+    };
 
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadUser({ accessToken, refreshToken }) as any);
-    }
-
-    dispatch(reset());
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
+    dispatch(createProduct(productData) as any);
+    toast.success("Uploaded successful");
+  };
 
   const onLogOut = () => {
     dispatch(logout({ accessToken, refreshToken }));
     dispatch(reset());
+    // navigate("/");
   };
 
   return (
@@ -406,107 +407,125 @@ export default function Products() {
             </div>
           </div>
           <main className="flex-1 pb-8">
-            <div className="px-4 sm:px-6 lg:px-8">
-              <div className="sm:flex sm:items-center">
-                <div className="sm:flex-auto">
-                  <h1 className="text-xl font-semibold text-gray-900">
-                    Products
-                  </h1>
-                  <p className="mt-2 text-sm text-gray-700">
-                    A list of all the products in your account including their
-                    name, image, email and desc.
-                  </p>
-                </div>
-                <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                  <Link to={routes.new}>
-                    <button
-                      type="button"
-                      className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                    >
-                      Add products
-                    </button>
-                  </Link>
-                </div>
-              </div>
-              <div className="mt-8 flex flex-col">
-                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                  <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                      <table className="min-w-full divide-y divide-gray-300">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th
-                              scope="col"
-                              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+            <div>
+              <div className="p-10">
+                <div className="mt-5 md:mt-0 md:col-span-2">
+                  <form action="#" onSubmit={onSubmit}>
+                    <div className="shadow sm:rounded-md sm:overflow-hidden">
+                      <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                        <div className="flex gap-6">
+                          <div className="sm:col-span-2">
+                            <label
+                              htmlFor="city"
+                              className="block text-sm font-medium text-gray-700"
                             >
-                              Name
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                              {" "}
+                              Title{" "}
+                            </label>
+                            <div className="mt-1">
+                              <input
+                                type="text"
+                                name="title"
+                                id="title"
+                                onChange={onChange}
+                                autoComplete="address-level2"
+                                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                              />
+                            </div>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <label
+                              htmlFor="city"
+                              className="block text-sm font-medium text-gray-700"
                             >
-                              Desc
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                              {" "}
+                              Category{" "}
+                            </label>
+                            <div className="mt-1">
+                              <input
+                                type="text"
+                                name="category"
+                                id="category"
+                                onChange={onChange}
+                                autoComplete="address-level2"
+                                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                              />
+                            </div>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <label
+                              htmlFor="city"
+                              className="block text-sm font-medium text-gray-700"
                             >
-                              Price
-                            </th>
-                            <th
-                              scope="col"
-                              className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                            >
-                              Category
-                            </th>
-                            <th
-                              scope="col"
-                              className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                            >
-                              <span className="sr-only">Delete</span>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white">
-                          {products &&
-                            products.map((product: any) => (
-                              <tr key={product._id} className="bg-gray-50">
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                  {product.title}
-                                </td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                  {truncate(product.description, 45)}
-                                  {/* {product.description} */}
-                                </td>
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                  {product.price}
-                                </td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                  {product.category}
-                                </td>
+                              {" "}
+                              Price{" "}
+                            </label>
+                            <div className="mt-1">
+                              <input
+                                type="number"
+                                name="price"
+                                id="price"
+                                onChange={onChange}
+                                autoComplete="address-level2"
+                                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                              />
+                            </div>
+                          </div>
+                        </div>
 
-                                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                  <a
-                                    onClick={() =>
-                                      dispatch(
-                                        deleteProduct(`${product.productId}`)
-                                      )
-                                    }
-                                    href="#"
-                                    className="text-indigo-600 hover:text-indigo-900"
-                                  >
-                                    Delete
-                                    <span className="sr-only">
-                                      , {product.title}
-                                    </span>
-                                  </a>
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
+                        <div>
+                          <label
+                            htmlFor="about"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            {" "}
+                            Description{" "}
+                          </label>
+                          <div className="mt-1">
+                            <textarea
+                              id="description"
+                              name="description"
+                              onChange={onChange}
+                              rows={3}
+                              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+                            ></textarea>
+                          </div>
+                          <p className="mt-2 text-sm text-gray-500">
+                            Brief description for your product
+                          </p>
+                        </div>
+
+                        <div className="md:col-span-2">
+                          <label
+                            htmlFor="city"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            {" "}
+                            Image{" "}
+                          </label>
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              name="image"
+                              placeholder="Image uri"
+                              id="image"
+                              onChange={onChange}
+                              autoComplete="address-level2"
+                              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                        <button
+                          type="submit"
+                          className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                          Upload
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -516,3 +535,5 @@ export default function Products() {
     </>
   );
 }
+
+export default NewProducts;

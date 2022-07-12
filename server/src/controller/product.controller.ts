@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import AdminModel from "../models/admin.models";
+import ProductModel from "../models/product.model";
 import {
   CreateProductInput,
   DeleteProductInput,
@@ -16,16 +18,14 @@ export async function createProductHandler(
   req: Request<{}, {}, CreateProductInput["body"]>,
   res: Response
 ) {
-  const userId = res.locals.user._id;
   const body = req.body;
-  const image = req.file;
+  // const image = req.file;
   //   console.log(image);
-  if (image == undefined) return res.send("image is not defined");
+  // if (image == undefined) return res.send("image is not defined");
   try {
     const product = await createProduct({
       ...body,
-      image,
-      user: userId,
+      adminUser: res.locals.user._id,
     });
 
     return res.send(product);
@@ -61,7 +61,7 @@ export async function updateProductHandler(
     return res.sendStatus(404);
   }
 
-  if (String(product.user) !== userId) {
+  if (String(product?.adminUser) !== userId) {
     return res.sendStatus(403);
   }
 
@@ -70,6 +70,16 @@ export async function updateProductHandler(
   });
 
   return res.send(updateProduct);
+}
+
+export async function getAllProducts(req: Request, res: Response) {
+  try {
+    const products = await ProductModel.find();
+    // console.log(products);
+    return res.send(products);
+  } catch (error: any) {
+    console.log(error.message);
+  }
 }
 
 export async function getProductHandler(
@@ -94,14 +104,17 @@ export async function deleteProductHandler(
   const userId = res.locals.user._id;
 
   const productId = req.params.productId;
+  // console.log(productId);
 
+  // const product = await ProductModel.findById(productId);
   const product = await findProduct({ productId });
 
   if (!product) {
     return res.sendStatus(404);
   }
 
-  if (String(product.user) !== userId) {
+  if (String(product?.adminUser) !== userId) {
+    console.log("users do not match");
     return res.sendStatus(403);
   }
 
