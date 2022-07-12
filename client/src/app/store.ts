@@ -8,6 +8,7 @@ export const store = configureStore({
     auth: authSlice,
     product: productSlice,
     user: userSlice,
+    // cart: cartSlice
   },
 });
 

@@ -1,6 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { Popover, Transition, Dialog, Tab } from "@headlessui/react";
 import {
+  footerNavigation,
+  trendingProducts,
+  collections,
   favorites,
   navigation,
 } from "../utils/data";
@@ -10,15 +13,13 @@ import {
   ShoppingBagIcon,
   XIcon,
 } from "@heroicons/react/outline";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 import { loadingUser } from "../features/user/userSlice";
-import { Link } from "react-router-dom";
-import routes from "../routes";
-import HeroSection from "./HeroSection";
-import FooterSection from "./FooterSection";
+import { toast } from "react-toastify";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -40,11 +41,19 @@ function HomePage() {
     }
   }, [products, user, dispatch]);
 
+  const addToCart = () => {
+    console.log("clicked");
+    if (!accessToken) {
+      toast.error("Please sign up");
+    }
+
+    toast.success("added to cart");
+  };
+
   return (
     <div className="bg-white">
       {/* Mobile menu */}
 
-      {/** Mobile Navigation */}
       {/* <Header /> */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
@@ -189,7 +198,7 @@ function HomePage() {
                 {user ? (
                   <div className="flow-root">
                     <a className="-m-2 p-2 block font-medium text-gray-900">
-                      Hello, {user && user.name}
+                      Hello, {user.name}
                     </a>
                   </div>
                 ) : (
@@ -209,23 +218,9 @@ function HomePage() {
                       >
                         Create account
                       </a>
-                      <Link
-                        to={routes.order}
-                        className="-m-2 mt-3 p-2 block font-medium text-gray-900"
-                      >
+                      <a className="-m-2 p-2 block font-medium text-gray-900">
                         Orders
-                      </Link>
-                      {/* Cart */}
-                          <Link to={routes.cart} className="group mt-3 -m-2 p-2 flex items-center">
-                            <ShoppingBagIcon
-                              className="flex-shrink-0 h-6 w-6 text-gray-900"
-                              aria-hidden="true"
-                            />
-                            <span className="ml-2 text-sm font-medium text-gray-900">
-                              0
-                            </span>
-                            <span className="sr-only">items in cart, view bag</span>
-                          </Link>
+                      </a>
                     </div>
                   </>
                 )}
@@ -234,8 +229,6 @@ function HomePage() {
           </Transition.Child>
         </Dialog>
       </Transition.Root>
-
-      {/** Main Navigation */}
 
       <header className="relative overflow-hidden">
         {/* Top navigation */}
@@ -247,7 +240,7 @@ function HomePage() {
             <div className="h-16 flex items-center">
               <button
                 type="button"
-                className="p-2 rounded-md text-[#f0c14b] lg:hidden"
+                className="text-[#f0c14b] p-2 rounded-md lg:hidden"
                 onClick={() => setOpen(true)}
               >
                 <span className="sr-only">Open menu</span>
@@ -405,18 +398,9 @@ function HomePage() {
               <div className="ml-auto flex items-center">
                 {user ? (
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <a
-                      href={getGoogleOAuthURL()}
-                      className="text-sm font-medium text-white hover:text-gray-200"
-                    >
+                    <a className="text-sm font-medium text-white hover:text-gray-200">
                       Hello, {user && user.name}
                     </a>
-                    <Link
-                      to={routes.order}
-                      className="text-sm font-medium text-white hover:text-gray-200"
-                      >
-                        Orders
-                      </Link>
                   </div>
                 ) : (
                   <>
@@ -437,6 +421,12 @@ function HomePage() {
                       >
                         Create account
                       </a>
+                      <a
+                        href="#"
+                        className="text-sm font-medium text-white hover:text-gray-200"
+                      >
+                        Orders
+                      </a>
                     </div>
                   </>
                 )}
@@ -451,7 +441,7 @@ function HomePage() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <Link to={routes.cart} className="group -m-2 p-2 flex items-center">
+                  <a href="#" className="group -m-2 p-2 flex items-center">
                     <ShoppingBagIcon
                       className="flex-shrink-0 h-6 w-6 text-gray-200"
                       aria-hidden="true"
@@ -460,7 +450,7 @@ function HomePage() {
                       0
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
@@ -468,7 +458,95 @@ function HomePage() {
         </nav>
 
         {/* Hero section */}
-        <HeroSection />
+        <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48 bg-gradient-to-r from-white to-[#f0c14b] ">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:static">
+            <div className="sm:max-w-lg">
+              <h1 className="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">
+                Summer styles are finally here
+              </h1>
+              <p className="mt-4 text-xl text-gray-500">
+                This year, our new summer collection will shelter you from the
+                harsh elements of a world that doesn't care if you live or die.
+              </p>
+            </div>
+            <div>
+              <div className="mt-10">
+                {/* Decorative image grid */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none lg:absolute lg:inset-y-0 lg:max-w-7xl lg:mx-auto lg:w-full"
+                >
+                  <div className="absolute transform sm:left-1/2 sm:top-0 sm:translate-x-8 lg:left-1/2 lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-8">
+                    <div className="flex items-center space-x-6 lg:space-x-8">
+                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
+                        <div className="w-44 h-64 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
+                          <img
+                            src="https://images.unsplash.com/photo-1518632263555-a442f0d25bb0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-01.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-03.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-04.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-05.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-06.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://tailwindui.com/img/ecommerce-images/home-page-03-hero-image-tile-07.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <a
+                  href="#"
+                  className="inline-block text-center bg-[#f0c14b] border border-[#a88734] rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
+                >
+                  Shop Collection
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
 
       <main>
@@ -565,7 +643,11 @@ function HomePage() {
                             </div>
                           </div>
                           <button
-                            type="button"
+                            // type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart();
+                            }}
                             className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
                           >
                             Add
@@ -934,8 +1016,116 @@ function HomePage() {
           </div>
         </section>
       </main>
-  
-      <FooterSection />
+
+      <footer aria-labelledby="footer-heading" className="bg-[#f0c14b]">
+        <h2 id="footer-heading" className="sr-only">
+          Footer
+        </h2>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
+            <div className="grid grid-cols-2 gap-8 xl:col-span-2">
+              <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                  <h3 className="text-sm font-medium text-white">Shop</h3>
+                  <ul role="list" className="mt-6 space-y-6">
+                    {footerNavigation.shop.map((item) => (
+                      <li key={item.name} className="text-sm">
+                        <a
+                          href={item.href}
+                          className="text-white hover:text-gray-600"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-white">Company</h3>
+                  <ul role="list" className="mt-6 space-y-6">
+                    {footerNavigation.company.map((item) => (
+                      <li key={item.name} className="text-sm">
+                        <a
+                          href={item.href}
+                          className="text-white hover:text-gray-600"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                  <h3 className="text-sm font-medium text-white">Account</h3>
+                  <ul role="list" className="mt-6 space-y-6">
+                    {footerNavigation.account.map((item) => (
+                      <li key={item.name} className="text-sm">
+                        <a
+                          href={item.href}
+                          className="text-white hover:text-gray-600"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-white">Connect</h3>
+                  <ul role="list" className="mt-6 space-y-6">
+                    {footerNavigation.connect.map((item) => (
+                      <li key={item.name} className="text-sm">
+                        <a
+                          href={item.href}
+                          className="text-white hover:text-gray-600"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="mt-16 md:mt-16 xl:mt-0">
+              <h3 className="text-sm font-medium text-white">
+                Sign up for our newsletter
+              </h3>
+              <p className="mt-6 text-sm text-white">
+                The latest deals and savings, sent to your inbox weekly.
+              </p>
+              <form className="mt-2 flex sm:max-w-md">
+                <label htmlFor="email-address" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="email-address"
+                  type="text"
+                  autoComplete="email"
+                  required
+                  className="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base placeholder-gray-500 focus:outline-none"
+                />
+                <div className="ml-4 flex-shrink-0">
+                  <button
+                    type="submit"
+                    className="w-full bg-gray-800 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Sign up
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 py-10">
+            <p className="text-sm text-white">
+              Copyright &copy; 2022 Ares Inc.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

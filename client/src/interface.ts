@@ -25,3 +25,10 @@ export interface productState {
   isProductLoading: boolean;
   productMessage: string;
 }
+
+export interface cartState {
+  items: any[];
+  user: object | null;
+  totalAmount: number;
+  totalCount: number;
+}
