@@ -24,6 +24,7 @@ import NewProducts from "./components/Admin/Layout/NewProducts";
 import Cookies from "js-cookie";
 import Orders from "./components/Orders";
 import Cart from "./components/Cart";
+import AuthError from "./components/AuthError";
 
 injectStyle();
 
@@ -32,7 +33,7 @@ function App() {
     (state: any) => state.auth
   );
 
-  const userAccessToken = Cookies.get("accessToken")
+  const userAccessToken = Cookies.get("accessToken");
   return (
     <>
       <Router>
@@ -63,6 +64,7 @@ function App() {
             path={routes.products}
             element={accessToken ? <Products /> : <Navigate to="/" />}
           />
+          <Route path={routes.authError} element={<AuthError />} />
         </Routes>
       </Router>
       <ToastContainer />
