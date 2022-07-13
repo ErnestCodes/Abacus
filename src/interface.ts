@@ -28,7 +28,16 @@ export interface productState {
 
 export interface cartState {
   items: any[];
-  user: object | null;
   totalAmount: number;
+  addSuccess: boolean;
   totalCount: number;
 }
+
+// export interface addState {
+//   image: string;
+//   description: string;
+//   id: string;
+//   user: object | null;
+//   price: string;
+//   title: string;
+// }

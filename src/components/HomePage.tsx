@@ -20,6 +20,8 @@ import { getAllProducts } from "../features/products/productSlice";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 import { loadingUser } from "../features/user/userSlice";
 import { toast } from "react-toastify";
+import routes from "../routes";
+import { setCart } from "../features/cart/cartSlice";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -27,10 +29,12 @@ function classNames(...classes: string[]) {
 
 function HomePage() {
   const [open, setOpen] = useState(false);
+  const { totalCount, addSuccess } = useSelector((state: any) => state.cart);
   const { products } = useSelector((state: any) => state.product);
   const { user, isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.user
   );
+  console.log(products);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -41,13 +45,24 @@ function HomePage() {
     }
   }, [products, user, dispatch]);
 
-  const addToCart = () => {
-    console.log("clicked");
+  const addToCart = (
+    image: string,
+    price: string,
+    id: string,
+    title: string,
+    description: string,
+    category: string,
+    user: object
+  ) => {
     if (!accessToken) {
       toast.error("Please sign up");
     }
 
-    toast.success("added to cart");
+    dispatch(setCart({ image, price, id, title, description, category, user }));
+
+    if (addSuccess) {
+      toast.success("added to cart");
+    }
   };
 
   return (
@@ -217,9 +232,6 @@ function HomePage() {
                         className="-m-2 p-2 block font-medium text-gray-900"
                       >
                         Create account
-                      </a>
-                      <a className="-m-2 p-2 block font-medium text-gray-900">
-                        Orders
                       </a>
                     </div>
                   </>
@@ -421,15 +433,15 @@ function HomePage() {
                       >
                         Create account
                       </a>
-                      <a
-                        href="#"
-                        className="text-sm font-medium text-white hover:text-gray-200"
-                      >
-                        Orders
-                      </a>
                     </div>
                   </>
                 )}
+                <Link
+                  to={routes.order}
+                  className="ml-3 text-sm font-medium text-white hover:text-gray-200"
+                >
+                  Orders
+                </Link>
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
@@ -442,12 +454,14 @@ function HomePage() {
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
                   <a href="#" className="group -m-2 p-2 flex items-center">
-                    <ShoppingBagIcon
-                      className="flex-shrink-0 h-6 w-6 text-gray-200"
-                      aria-hidden="true"
-                    />
+                    <Link to={routes.cart}>
+                      <ShoppingBagIcon
+                        className="flex-shrink-0 h-6 w-6 text-gray-200"
+                        aria-hidden="true"
+                      />
+                    </Link>
                     <span className="ml-2 text-sm font-medium text-gray-200">
-                      0
+                      {totalCount}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
@@ -646,7 +660,15 @@ function HomePage() {
                             // type="button"
                             onClick={(e) => {
                               e.preventDefault();
-                              addToCart();
+                              addToCart(
+                                product.image,
+                                product.price,
+                                product._id,
+                                product.title,
+                                product.description,
+                                product.category,
+                                user
+                              );
                             }}
                             className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
                           >
