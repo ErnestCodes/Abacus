@@ -25,6 +25,7 @@ import Cookies from "js-cookie";
 import Orders from "./components/Orders";
 import Cart from "./components/Cart";
 import AuthError from "./components/AuthError";
+import { loadingUser } from "./features/user/userSlice";
 
 injectStyle();
 
@@ -32,6 +33,10 @@ function App() {
   const { isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.auth
   );
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  dispatch(loadingUser()) as any;
 
   const userAccessToken = Cookies.get("accessToken");
   return (
