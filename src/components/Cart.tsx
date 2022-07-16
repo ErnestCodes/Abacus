@@ -16,16 +16,15 @@ import FooterSection from "./FooterSection";
 import { Link } from "react-router-dom";
 import routes from "../routes";
 import NavHeader from "./NavHeader";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { remove } from "../features/cart/cartSlice";
 
 function Cart() {
-  const [open, setOpen] = useState(false);
   const { user, isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.user
   );
+
+  const { items } = useSelector((state: any) => state.cart);
+
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -76,148 +75,35 @@ function Cart() {
                 role="list"
                 className="divide-y divide-gray-200 border-b border-gray-200"
               >
-                <li className="flex py-6 space-x-6">
-                  <img
-                    src="https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg"
-                    alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
-                    className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
-                  />
-                  <div className="flex flex-col justify-between space-y-4">
-                    <div className="text-sm font-medium space-y-1">
-                      <h3 className="text-gray-900">Micro Backpack</h3>
-                      <p className="text-gray-900">$70.00</p>
-                      <p className="text-gray-500">Moss</p>
-                      <p className="text-gray-500">5L</p>
-                    </div>
-                    <div className="flex space-x-4">
-                      <button
-                        type="button"
-                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        Edit
-                      </button>
-                      <div className="flex border-l border-gray-300 pl-4">
-                        <button
-                          type="button"
-                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                          Remove
-                        </button>
+                {items.map((item: any) => (
+                  <li className="flex py-6 space-x-6">
+                    <img
+                      src={item.image}
+                      alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
+                      className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
+                    />
+                    <div className="flex flex-col justify-between space-y-4">
+                      <div className="text-sm font-medium space-y-1">
+                        <h3 className="text-gray-900">{item.title}</h3>
+                        <p className="text-gray-900">${item.price}</p>
+                      </div>
+                      <div className="flex space-x-4">
+                        <div className="flex pl-4">
+                          <button
+                            type="button"
+                            onClick={() => dispatch(remove(item.id))}
+                            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-                <li className="flex py-6 space-x-6">
-                  <img
-                    src="https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg"
-                    alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
-                    className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
-                  />
-                  <div className="flex flex-col justify-between space-y-4">
-                    <div className="text-sm font-medium space-y-1">
-                      <h3 className="text-gray-900">Micro Backpack</h3>
-                      <p className="text-gray-900">$70.00</p>
-                      <p className="text-gray-500">Moss</p>
-                      <p className="text-gray-500">5L</p>
-                    </div>
-                    <div className="flex space-x-4">
-                      <button
-                        type="button"
-                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        Edit
-                      </button>
-                      <div className="flex border-l border-gray-300 pl-4">
-                        <button
-                          type="button"
-                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li className="flex py-6 space-x-6">
-                  <img
-                    src="https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg"
-                    alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
-                    className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
-                  />
-                  <div className="flex flex-col justify-between space-y-4">
-                    <div className="text-sm font-medium space-y-1">
-                      <h3 className="text-gray-900">Micro Backpack</h3>
-                      <p className="text-gray-900">$70.00</p>
-                      <p className="text-gray-500">Moss</p>
-                      <p className="text-gray-500">5L</p>
-                    </div>
-                    <div className="flex space-x-4">
-                      <button
-                        type="button"
-                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                      >
-                        Edit
-                      </button>
-                      <div className="flex border-l border-gray-300 pl-4">
-                        <button
-                          type="button"
-                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                {/** More products...*/}
+                  </li>
+                ))}
               </ul>
-
-              <form className="mt-10">
-                <label className="block text-sm font-medium text-gray-700">
-                  Discount code
-                </label>
-                <div className="flex space-x-4 mt-1">
-                  <input
-                    type="text"
-                    id="discount-code-mobile"
-                    name="discount-code-mobile"
-                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-gray-200 text-sm font-medium text-gray-600 rounded-md px-4 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                  >
-                    Apply
-                  </button>
-                </div>
-              </form>
-
-              <dl className="text-sm font-medium text-gray-500 mt-10 space-y-6">
-                <div className="flex justify-between">
-                  <dt>Subtotal</dt>
-                  <dd className="text-gray-900">$210.00</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="flex">
-                    Discount
-                    <span className="ml-2 rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 tracking-wide">
-                      CHEAPSKATE
-                    </span>
-                  </dt>
-                  <dd className="text-gray-900">-$24.00</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt>Taxes</dt>
-                  <dd className="text-gray-900">$23.68</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt>Shipping</dt>
-                  <dd className="text-gray-900">$22.00</dd>
-                </div>
-              </dl>
             </div>
-
-            <p className="flex items-center justify-between text-sm font-medium text-gray-900 border-t border-gray-200 pt-6 mt-6">
+            <p className="flex items-center justify-between text-sm font-medium text-gray-900  pt-6 mt-6">
               <span className="text-base">Total</span>
               <span className="text-base">$341.68</span>
             </p>
@@ -237,147 +123,39 @@ function Cart() {
             role="list"
             className="flex-auto overflow-y-auto divide-y divide-gray-200 px-6"
           >
-            <li className="flex py-6 space-x-6">
-              <img
-                src="https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg"
-                alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
-                className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
-              />
-              <div className="flex flex-col justify-between space-y-4">
-                <div className="text-sm font-medium space-y-1">
-                  <h3 className="text-gray-900">Micro Backpack</h3>
-                  <p className="text-gray-900">$70.00</p>
-                  <p className="text-gray-500">Moss</p>
-                  <p className="text-gray-500">5L</p>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Edit
-                  </button>
-                  <div className="flex border-l border-gray-300 pl-4">
-                    <button
-                      type="button"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
+            {items.map((item: any) => (
+              <li className="flex py-6 space-x-6">
+                <img
+                  src={item.image}
+                  alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
+                  className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
+                />
+                <div className="flex flex-col justify-between space-y-4">
+                  <div className="text-sm font-medium space-y-1">
+                    <h3 className="text-gray-900">{item.title}</h3>
+                    <p className="text-gray-900">${item.price}</p>
+                  </div>
+                  <div className="flex space-x-4">
+                    <div className="flex">
+                      <button
+                        type="button"
+                        onClick={() => dispatch(remove(item.id))}
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-            <li className="flex py-6 space-x-6">
-              <img
-                src="https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg"
-                alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
-                className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
-              />
-              <div className="flex flex-col justify-between space-y-4">
-                <div className="text-sm font-medium space-y-1">
-                  <h3 className="text-gray-900">Micro Backpack</h3>
-                  <p className="text-gray-900">$70.00</p>
-                  <p className="text-gray-500">Moss</p>
-                  <p className="text-gray-500">5L</p>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Edit
-                  </button>
-                  <div className="flex border-l border-gray-300 pl-4">
-                    <button
-                      type="button"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="flex py-6 space-x-6">
-              <img
-                src="https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg"
-                alt="Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps."
-                className="flex-none w-40 h-40 object-center object-cover bg-gray-200 rounded-md"
-              />
-              <div className="flex flex-col justify-between space-y-4">
-                <div className="text-sm font-medium space-y-1">
-                  <h3 className="text-gray-900">Micro Backpack</h3>
-                  <p className="text-gray-900">$70.00</p>
-                  <p className="text-gray-500">Moss</p>
-                  <p className="text-gray-500">5L</p>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Edit
-                  </button>
-                  <div className="flex border-l border-gray-300 pl-4">
-                    <button
-                      type="button"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
+              </li>
+            ))}
 
             {/** More products... */}
           </ul>
 
           <div className="sticky bottom-0 flex-none bg-gray-50 border-t border-gray-200 p-6">
-            <form>
-              <label className="block text-sm font-medium text-gray-700">
-                Discount code
-              </label>
-              <div className="flex space-x-4 mt-1">
-                <input
-                  type="text"
-                  id="discount-code"
-                  name="discount-code"
-                  className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <button
-                  type="submit"
-                  className="bg-gray-200 text-sm font-medium text-gray-600 rounded-md px-4 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                >
-                  Apply
-                </button>
-              </div>
-            </form>
-
-            <dl className="text-sm font-medium text-gray-500 mt-10 space-y-6">
-              <div className="flex justify-between">
-                <dt>Subtotal</dt>
-                <dd className="text-gray-900">$210.00</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="flex">
-                  Discount
-                  <span className="ml-2 rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 tracking-wide">
-                    CHEAPSKATE
-                  </span>
-                </dt>
-                <dd className="text-gray-900">-$24.00</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>Taxes</dt>
-                <dd className="text-gray-900">$23.68</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>Shipping</dt>
-                <dd className="text-gray-900">$22.00</dd>
-              </div>
-              <div className="flex items-center justify-between border-t border-gray-200 text-gray-900 pt-6">
+            <dl className="text-sm font-medium text-gray-500 mt-6 space-y-6">
+              <div className="flex items-center justify-between  text-gray-900 pt-6">
                 <dt className="text-base">Total</dt>
                 <dd className="text-base">$341.68</dd>
               </div>
@@ -391,13 +169,6 @@ function Cart() {
           className="flex-auto overflow-y-auto px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:px-8 lg:pt-0 lg:pb-24"
         >
           <div className="max-w-lg mx-auto">
-            {/* <div className="hidden pt-10 pb-16 lg:flex">
-        <a href="#">
-          <span className="sr-only">Workflow</span>
-          <img src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="" className="h-8 w-auto" />
-        </a>
-      </div> */}
-
             <button
               type="button"
               className="w-full flex items-center justify-center bg-black border border-transparent text-white rounded-md py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"

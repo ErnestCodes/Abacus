@@ -16,7 +16,6 @@ export const cartSlice = createSlice({
   reducers: {
     setCart: (state, action) => {
       state.items = [...state.items, action.payload];
-      state.totalCount += 1;
       state.addSuccess = true;
     },
     remove: (state, action) => {
@@ -46,5 +45,5 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setCart } = cartSlice.actions;
+export const { setCart, remove, getCartTotal } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -30,6 +30,17 @@ import { loadingUser } from "./features/user/userSlice";
 injectStyle();
 
 function App() {
+  const queryParams = new URLSearchParams(window.location.search);
+  const data = queryParams.get("data") as any;
+  const detail = queryParams.get("detail") as any;
+  if (detail) {
+    localStorage.setItem("userRefresh", detail);
+  }
+
+  if (data) {
+    localStorage.setItem("userAccess", data);
+  }
+
   const { isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.auth
   );
