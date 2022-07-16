@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { userState } from "../../interface";
 import userService from "./userService";
 import Cookies from "js-cookie";
-const accessToken = Cookies.get("accessToken");
-const refreshToken = Cookies.get("refreshToken");
+const accessToken = localStorage.getItem("userAccess");
+const refreshToken = localStorage.getItem("userRefresh");
 
 const initialState: userState = {
   user: null,

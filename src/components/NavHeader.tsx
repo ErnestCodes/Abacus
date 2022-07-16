@@ -20,7 +20,7 @@ function NavHeader() {
   const [open, setOpen] = useState(false);
 
   const { user } = useSelector((state: any) => state.user);
-  const { totalCount } = useSelector((state: any) => state.cart);
+  const { items } = useSelector((state: any) => state.cart);
   return (
     <>
       {/* <Header /> */}
@@ -415,7 +415,7 @@ function NavHeader() {
                       />
                     </Link>
                     <span className="ml-2 text-sm font-medium text-gray-200">
-                      {totalCount}
+                      {items.length}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </div>
