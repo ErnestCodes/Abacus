@@ -10,8 +10,8 @@ export interface authState {
 
 export interface userState {
   user: object | null;
-  accessToken: string | null;
-  refreshToken: string | null;
+  userAccessToken: string | null;
+  userRefreshToken: string | null;
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;

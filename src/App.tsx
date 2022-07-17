@@ -49,7 +49,8 @@ function App() {
 
   dispatch(loadingUser()) as any;
 
-  const userAccessToken = Cookies.get("accessToken");
+  const { user } = useSelector((state: any) => state.user);
+
   return (
     <>
       <Router>
@@ -58,11 +59,11 @@ function App() {
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
           <Route
             path={routes.order}
-            element={userAccessToken ? <Orders /> : <Navigate to="/" />}
+            element={user ? <Orders /> : <Navigate to="/" />}
           />
           <Route
             path={routes.cart}
-            element={userAccessToken ? <Cart /> : <Navigate to="/" />}
+            element={user ? <Cart /> : <Navigate to="/" />}
           />
           <Route
             path={routes.dashboard}

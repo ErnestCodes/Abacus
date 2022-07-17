@@ -415,7 +415,7 @@ function Header() {
                       />
                     </Link>
                     <span className="ml-2 text-sm font-medium text-gray-200">
-                      {items.length}
+                      {user ? items.length : 0}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>

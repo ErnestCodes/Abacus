@@ -3,12 +3,13 @@ import { userState } from "../../interface";
 import userService from "./userService";
 import Cookies from "js-cookie";
 const accessToken = localStorage.getItem("userAccess");
+console.log(accessToken);
 const refreshToken = localStorage.getItem("userRefresh");
 
 const initialState: userState = {
   user: null,
-  accessToken: accessToken ? accessToken : null,
-  refreshToken: refreshToken ? refreshToken : null,
+  userAccessToken: accessToken ? accessToken : null,
+  userRefreshToken: refreshToken ? refreshToken : null,
   isError: false,
   isSuccess: false,
   isLoading: false,

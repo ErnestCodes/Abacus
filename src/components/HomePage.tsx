@@ -8,6 +8,7 @@ import { loadingUser } from "../features/user/userSlice";
 import { toast } from "react-toastify";
 import { setCart } from "../features/cart/cartSlice";
 import Header from "./Header";
+import { nanoid } from "nanoid";
 
 function HomePage() {
   const { addSuccess } = useSelector((state: any) => state.cart);
@@ -151,7 +152,7 @@ function HomePage() {
                               addToCart(
                                 product.image,
                                 product.price,
-                                product._id,
+                                nanoid(),
                                 product.title,
                                 product.description,
                                 product.category,
