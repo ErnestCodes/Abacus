@@ -254,6 +254,18 @@ function HomePage() {
                           </div>
                           <button
                             type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart(
+                                product.image,
+                                product.price,
+                                nanoid(),
+                                product.title,
+                                product.description,
+                                product.category,
+                                user
+                              );
+                            }}
                             className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
                           >
                             Add

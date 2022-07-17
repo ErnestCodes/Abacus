@@ -1,10 +1,38 @@
 import { useDispatch, useSelector } from "react-redux";
-import { remove } from "../features/cart/cartSlice";
+import { getCartTotal, remove } from "../features/cart/cartSlice";
+import { Client, Environment } from "square";
+import { SQUARE_SANDBOX_TOKEN } from "../square";
+import { nanoid } from "nanoid";
 
 export default function Checkout() {
   const { items } = useSelector((state: any) => state.cart);
 
   const dispatch = useDispatch();
+
+  const client = new Client({
+    environment: Environment.Sandbox,
+    accessToken: SQUARE_SANDBOX_TOKEN,
+  });
+
+  const checkoutPayment = async () => {
+    try {
+      const response = await client.checkoutApi.createPaymentLink({
+        idempotencyKey: nanoid(),
+        quickPay: {
+          name: "Auto Detailing",
+          priceMoney: {
+            amount: 10000 as any,
+            currency: "USD",
+          },
+          locationId: "L101MS3X2B072",
+        },
+      });
+
+      console.log(response.result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -77,7 +105,7 @@ export default function Checkout() {
                 <div className="flex items-center justify-between">
                   <dt className="text-base font-medium text-gray-900">Total</dt>
                   <dd className="ml-4 text-base font-medium text-gray-900">
-                    $96.00
+                    ${getCartTotal(items)}
                   </dd>
                 </div>
               </dl>
@@ -87,6 +115,10 @@ export default function Checkout() {
             <div className="mt-10">
               <button
                 type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  checkoutPayment();
+                }}
                 className="w-full bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
               >
                 Checkout
