@@ -3,6 +3,7 @@ import { getCartTotal, remove } from "../features/cart/cartSlice";
 import { Client, Environment } from "square";
 import { SQUARE_SANDBOX_TOKEN } from "../square";
 import { nanoid } from "nanoid";
+import React from "react";
 
 export default function Checkout() {
   const { items } = useSelector((state: any) => state.cart);
