@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "api/products/";
+const API_URL = "https://abacus-webserver.herokuapp.com/api/products/";
 
 // Create new goal
 const createProduct = async (productData: any) => {
@@ -18,7 +18,7 @@ const createProduct = async (productData: any) => {
   };
 
   const response = await axios.post(API_URL, productData, config);
-  console.log(response.data);
+  // console.log(response.data);
 
   return response.data;
 };
@@ -37,7 +37,7 @@ const updateProduct = async (
   };
 
   const response = await axios.post(
-    `/api/products/${productId}`,
+    `https://abacus-webserver.herokuapp.com/api/products/${productId}`,
     productData,
     config
   );
@@ -53,14 +53,19 @@ const getProducts = async (token: any, productId: any) => {
     },
   };
 
-  const response = await axios.get(`api/products/${productId}`, config);
+  const response = await axios.get(
+    `https://abacus-webserver.herokuapp.com/api/products/${productId}`,
+    config
+  );
 
   return response.data;
 };
 
 // Get all Products
 const getAllProduct = async () => {
-  const res = await axios.get("api/products");
+  const res = await axios.get(
+    "https://abacus-webserver.herokuapp.com/api/products"
+  );
   // console.log(res.data);
   return res.data;
 };

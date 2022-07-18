@@ -11,7 +11,10 @@ const loadingUser = async () => {
     },
   };
   try {
-    const res = await axios.get("api/me", config);
+    const res = await axios.get(
+      "https://abacus-webserver.herokuapp.com/api/me",
+      config
+    );
     return res.data;
   } catch (error) {
     console.log(error);

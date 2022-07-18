@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import setAuthToken from "../../utils/setAuthToken";
+// import { useDispatch } from "react-redux";
+// import setAuthToken from "../../utils/setAuthToken";
 
-const API_URL = "api/sessions/";
+const API_URL = "https://abacus-webserver.herokuapp.com/api/sessions/";
 
 // LoadUser
 const loadUser = async (accessToken: any, refreshToken: any) => {
@@ -13,7 +13,10 @@ const loadUser = async (accessToken: any, refreshToken: any) => {
     },
   };
   try {
-    const res = await axios.get("api/me", config);
+    const res = await axios.get(
+      "https://abacus-webserver.herokuapp.com/api/me",
+      config
+    );
     return res.data;
   } catch (error) {
     console.log(error);
