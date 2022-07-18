@@ -215,14 +215,14 @@ function NavHeader() {
 
               {/* Logo */}
               <div className="ml-4 mb-3 flex lg:ml-0">
-                <a href="#">
+                <Link to="/">
                   <span className="sr-only">Workflow</span>
                   <img
                     className="h-14 w-auto"
                     src="https://abacus-47e6d.web.app/img/abacus223.png"
                     alt=""
                   />
-                </a>
+                </Link>
               </div>
 
               {/* Flyout menus */}

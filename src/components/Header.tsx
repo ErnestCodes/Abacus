@@ -215,14 +215,14 @@ function Header() {
 
               {/* Logo */}
               <div className="ml-4 mb-3 flex lg:ml-0">
-                <a href="#">
+                <Link to="/">
                   <span className="sr-only">Workflow</span>
                   <img
                     className="h-14 w-auto"
                     src="https://abacus-47e6d.web.app/img/abacus223.png"
                     alt=""
                   />
-                </a>
+                </Link>
               </div>
 
               {/* Flyout menus */}
@@ -407,18 +407,19 @@ function Header() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 p-2 flex items-center">
-                    <Link to={routes.cart}>
-                      <ShoppingBagIcon
-                        className="flex-shrink-0 h-6 w-6 text-gray-200"
-                        aria-hidden="true"
-                      />
-                    </Link>
-                    <span className="ml-2 text-sm font-medium text-gray-200">
-                      {user ? items.length : 0}
-                    </span>
-                    <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  <Link
+                    to={routes.cart}
+                    className="group -m-2 p-2 flex items-center"
+                  >
+                    <ShoppingBagIcon
+                      className="flex-shrink-0 h-6 w-6 text-gray-200"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                  <span className="ml-2 text-sm font-medium text-gray-200">
+                    {user ? items.length : 0}
+                  </span>
+                  <span className="sr-only">items in cart, view bag</span>
                 </div>
               </div>
             </div>
