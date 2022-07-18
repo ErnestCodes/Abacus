@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/products/";
+const API_URL = "api/products/";
 
 // Create new goal
 const createProduct = async (productData: any) => {
@@ -53,14 +53,14 @@ const getProducts = async (token: any, productId: any) => {
     },
   };
 
-  const response = await axios.get(`/api/products/${productId}`, config);
+  const response = await axios.get(`api/products/${productId}`, config);
 
   return response.data;
 };
 
 // Get all Products
 const getAllProduct = async () => {
-  const res = await axios.get("/api/products");
+  const res = await axios.get("api/products");
   // console.log(res.data);
   return res.data;
 };
