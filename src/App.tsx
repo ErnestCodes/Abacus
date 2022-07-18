@@ -15,9 +15,9 @@ import Products from "./components/Admin/Layout/Products";
 import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 import { injectStyle } from "react-toastify/dist/inject-style";
-import setAuthToken from "./utils/setAuthToken";
-import { AppDispatch, store } from "./app/store";
-import axios from "axios";
+// import setAuthToken from "./utils/setAuthToken";
+// import { AppDispatch, store } from "./app/store";
+// import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import NewProducts from "./components/Admin/Layout/NewProducts";
 import Orders from "./components/Orders";
@@ -43,11 +43,10 @@ function App() {
     (state: any) => state.auth
   );
 
-  const dispatch = useDispatch<AppDispatch>();
-
-  dispatch(loadingUser()) as any;
-
+  // const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: any) => state.user);
+
+  // dispatch(loadingUser()) as any;
 
   return (
     <>

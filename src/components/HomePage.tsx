@@ -19,11 +19,11 @@ function HomePage() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(getAllProducts()) as any;
+    dispatch(loadingUser()) as any;
+  }, []);
 
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadingUser()) as any;
-    }
+  useEffect(() => {
+    dispatch(getAllProducts()) as any;
   }, [products, user, dispatch]);
 
   const addToCart = (
