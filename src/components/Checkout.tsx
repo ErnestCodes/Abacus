@@ -10,8 +10,14 @@ import { AppDispatch } from "../app/store";
 import { Link } from "react-router-dom";
 
 export default function Checkout() {
-  const { items } = useSelector((state: any) => state.cart);
-  const dispatch = useDispatch();
+  const { items, linkDetails } = useSelector((state: any) => state.cart);
+  const totalAmount = getCartTotal(items);
+  const names = [...items.map((item: any) => item.title)].toString();
+  const dispatch = useDispatch<AppDispatch>();
+
+  // useEffect(() => {
+  //   dispatch(createPaymentLink({ totalAmount, names }));
+  // }, []);
 
   return (
     <div className="bg-white">
@@ -93,11 +99,18 @@ export default function Checkout() {
 
             <div className="mt-10">
               <a
-                href="/payment"
+                // href="/payment"
                 type="submit"
-                rel="noreferrer"
+                // rel="noreferrer"
                 // target="_blank"
                 className="w-full text-center bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
+                onClick={() => {
+                  dispatch(createPaymentLink({ totalAmount, names }));
+
+                  if (linkDetails) {
+                    window.open(linkDetails.paymentLink.url);
+                  }
+                }}
               >
                 Checkout
               </a>

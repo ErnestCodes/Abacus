@@ -6,7 +6,7 @@ const createPaymentLink = async (cartData: object) => {
   try {
     const response = await axios.post(API_URL, cartData);
 
-    console.log(response.data);
+    // console.log(response.data);
 
     return response.data;
   } catch (error) {
