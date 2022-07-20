@@ -10,7 +10,9 @@ export default function RedirectPage() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  dispatch(createPaymentLink({ totalAmount, names }));
+  useEffect(() => {
+    dispatch(createPaymentLink({ totalAmount, names }));
+  });
 
   window.location.href = linkDetails.paymentLink.url;
 
