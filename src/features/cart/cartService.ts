@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://abacus-webserver.herokuapp.com//api/payment/";
+const API_URL = "https://abacus-webserver.herokuapp.com/api/payment/";
 
 const createPaymentLink = async (cartData: object) => {
   try {
