@@ -24,6 +24,7 @@ import Orders from "./components/Orders";
 import Cart from "./components/Cart";
 import AuthError from "./components/AuthError";
 import { loadingUser } from "./features/user/userSlice";
+import RedirectPage from "./components/RedirectPage";
 
 injectStyle();
 
@@ -70,6 +71,7 @@ function App() {
             path={routes.new}
             element={accessToken ? <NewProducts /> : <Navigate to="/" />}
           />
+          <Route path="/payment" element={<RedirectPage />} />
           <Route
             path={routes.users}
             element={accessToken ? <Users /> : <Navigate to="/" />}

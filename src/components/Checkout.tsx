@@ -1,65 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getCartTotal, remove } from "../features/cart/cartSlice";
-import { Client, Environment } from "square";
-import { SQUARE_SANDBOX_TOKEN } from "../square";
-import { nanoid } from "nanoid";
-import React from "react";
-import axios from "axios";
+import {
+  createPaymentLink,
+  getCartTotal,
+  remove,
+} from "../features/cart/cartSlice";
+// import { nanoid } from "nanoid";
+import React, { useEffect } from "react";
+import { AppDispatch } from "../app/store";
+import { Link } from "react-router-dom";
 
 export default function Checkout() {
   const { items } = useSelector((state: any) => state.cart);
-
   const dispatch = useDispatch();
-
-  const client = new Client({
-    environment: Environment.Sandbox,
-    accessToken: SQUARE_SANDBOX_TOKEN,
-  });
-
-  // const checkoutPayment = async () => {
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${SQUARE_SANDBOX_TOKEN}`,
-  //       "Content-Type": "application/json",
-  //       "Square-Version": "2019-08-14",
-  //     },
-  //   };
-
-  //   const DATA = {
-  //     idempotency_key: "69fb7a6f-c99a-4d17-aac0-34db78adf53f",
-  //     description: "Order Air max",
-  //     quick_pay: {
-  //       name: "Apple airpod Max",
-  //       price_money: {
-  //         amount: 500,
-  //         currency: "USD",
-  //       },
-  //       location_id: "L101MS3X2B072",
-  //     },
-  //     source: "abacus",
-  //     payment_note: "Order has been received",
-  //   };
-
-  //   try {
-  //     const response = await fetch(
-  //       "https://connect.squareupsandbox.com/v2/online-checkout/payment-links",
-  //       {
-  //         mode: "cors",
-  //         credentials: "include",
-  //         method: "POST",
-  //         headers: {
-  //           Authorization: `Bearer ${SQUARE_SANDBOX_TOKEN}`,
-  //           "Content-Type": "application/json",
-  //           "Square-Version": "2019-08-14",
-  //         },
-  //         body: DATA as any,
-  //       }
-  //     );
-  //     console.log(response.json());
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   return (
     <div className="bg-white">
@@ -140,15 +92,17 @@ export default function Checkout() {
             </div>
 
             <div className="mt-10">
-              <button
+              <a
+                href="/payment"
                 type="submit"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-                className="w-full bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
+                // onClick={(e) => {
+                //   e.preventDefault();
+                //   checkout();
+                // }}
+                className="w-full text-center bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
               >
                 Checkout
-              </button>
+              </a>
             </div>
           </section>
         </form>

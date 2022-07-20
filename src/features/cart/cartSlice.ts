@@ -1,5 +1,6 @@
 import { cartState } from "../../interface";
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import cartService from "./cartService";
 
 // state
 const initialState: cartState = {
@@ -7,6 +8,10 @@ const initialState: cartState = {
   totalAmount: 0,
   totalCount: 0,
   addSuccess: false,
+  linkDetails: [],
+  isLinkLoading: false,
+  linkErrorMsg: "",
+  isLinkError: false,
 };
 
 export const getCartTotal = (basket: []) =>
@@ -14,6 +19,23 @@ export const getCartTotal = (basket: []) =>
     (amount: any, item: any) => parseInt(item.price) + parseInt(amount),
     0
   );
+
+export const createPaymentLink = createAsyncThunk(
+  "cart/payment",
+  async (cartData: object, thunkAPI) => {
+    try {
+      return await cartService.createPaymentLink(cartData);
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const cartSlice = createSlice({
   name: "cart",
@@ -29,6 +51,27 @@ export const cartSlice = createSlice({
     clearCart: (state, action) => {
       state.items = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createPaymentLink.pending, (state) => {
+        state.isLinkLoading = true;
+      })
+      .addCase(
+        createPaymentLink.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.isLinkLoading = false;
+          state.linkDetails = action.payload;
+        }
+      )
+      .addCase(
+        createPaymentLink.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.isLinkLoading = false;
+          state.linkErrorMsg = action.payload;
+          state.isLinkError = true;
+        }
+      );
   },
 });
 

@@ -31,6 +31,10 @@ export interface cartState {
   totalAmount: number;
   addSuccess: boolean;
   totalCount: number;
+  linkDetails: any[];
+  isLinkLoading: boolean;
+  linkErrorMsg: string;
+  isLinkError: boolean;
 }
 
 // export interface addState {
