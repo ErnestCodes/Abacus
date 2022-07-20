@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { createPaymentLink, getCartTotal } from "../features/cart/cartSlice";
@@ -10,9 +10,7 @@ export default function RedirectPage() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(createPaymentLink({ totalAmount, names }));
-  });
+  dispatch(createPaymentLink({ totalAmount, names }));
 
   window.location.href = linkDetails.paymentLink.url;
 
