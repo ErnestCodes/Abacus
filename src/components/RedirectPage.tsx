@@ -8,13 +8,15 @@ export default function RedirectPage() {
   const totalAmount = getCartTotal(items);
   const names = [...items.map((item: any) => item.title)].toString();
 
+  console.log(linkDetails);
+
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(createPaymentLink({ totalAmount, names }));
+    dispatch(createPaymentLink(items));
   }, []);
 
-  window.location.href = linkDetails.paymentLink.url;
+  // window.location.href = linkDetails?.paymentLink.url;
   // window.open(linkDetails.paymentLink.url);
 
   // Render some text when redirecting
