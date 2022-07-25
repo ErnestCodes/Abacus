@@ -10,4 +10,6 @@ export default {
   order: "/orders",
   cart: "/cart",
   authError: "/oauth/error",
+  toc: "/toc",
+  policy: "/policy"
 };
