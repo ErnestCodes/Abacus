@@ -14,8 +14,8 @@ export default function RedirectPage() {
     dispatch(createPaymentLink({ totalAmount, names }));
   }, []);
 
-  // window.location.href = linkDetails.paymentLink.url;
-  window.open(linkDetails.paymentLink.url);
+  window.location.href = linkDetails.paymentLink.url;
+  // window.open(linkDetails.paymentLink.url);
 
   // Render some text when redirecting
   // You can use a loading gif or something like that
