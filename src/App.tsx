@@ -26,6 +26,7 @@ import AuthError from "./components/AuthError";
 import { loadingUser } from "./features/user/userSlice";
 import RedirectPage from "./components/RedirectPage";
 import Toc from "./components/Toc";
+import Policy from "./components/Policy";
 
 injectStyle();
 
@@ -57,6 +58,7 @@ function App() {
           <Route path={routes.home} element={<HomePage />} />
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
           <Route path={routes.toc} element={<Toc/>} />
+          <Route path={routes.policy} element={<Policy/>} />
           <Route
             path={routes.order}
             element={user ? <Orders /> : <Navigate to="/" />}
