@@ -22,7 +22,7 @@ export const getCartTotal = (basket: []) =>
 
 export const createPaymentLink = createAsyncThunk(
   "cart/payment",
-  async (cartData: [], thunkAPI) => {
+  async (cartData: {}, thunkAPI) => {
     try {
       return await cartService.createPaymentLink(cartData);
     } catch (error: any) {

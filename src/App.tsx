@@ -57,8 +57,8 @@ function App() {
         <Routes>
           <Route path={routes.home} element={<HomePage />} />
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
-          <Route path={routes.toc} element={<Toc/>} />
-          <Route path={routes.policy} element={<Policy/>} />
+          <Route path={routes.toc} element={<Toc />} />
+          <Route path={routes.policy} element={<Policy />} />
           <Route
             path={routes.order}
             element={user ? <Orders /> : <Navigate to="/" />}

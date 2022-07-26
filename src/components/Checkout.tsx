@@ -100,9 +100,17 @@ export default function Checkout() {
             <div className="mt-10">
               <Link
                 to="/payment"
+                // rel="noreferrer"
                 // target="_blank"
                 className="w-full text-center bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
-                onClick={() => dispatch(createPaymentLink(items))}
+                onClick={() => {
+                  dispatch(createPaymentLink({ names, totalAmount, items }));
+
+                  // if (linkDetails) {
+                  //   window.open(linkDetails.paymentLink.url);
+                  //   // window.location.href = linkDetails.paymentLink.url;
+                  // }
+                }}
               >
                 Checkout
               </Link>
