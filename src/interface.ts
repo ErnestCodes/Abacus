@@ -37,6 +37,11 @@ export interface cartState {
   isLinkError: boolean;
 }
 
+export interface orderState {
+  order: any[];
+  orderSuccess: boolean;
+}
+
 // export interface addState {
 //   image: string;
 //   description: string;

@@ -8,9 +8,12 @@ import {
 import React, { useEffect } from "react";
 import { AppDispatch } from "../app/store";
 import { Link } from "react-router-dom";
+import { createOrders } from "../features/orders/OrderSlice";
 
 export default function Checkout() {
   const { items, linkDetails } = useSelector((state: any) => state.cart);
+  let { user } = useSelector((state: any) => state.user);
+  const email = user.email;
   const totalAmount = getCartTotal(items);
   const names = [...items.map((item: any) => item.title)].toString();
   const dispatch = useDispatch<AppDispatch>();
@@ -105,7 +108,7 @@ export default function Checkout() {
                 className="w-full text-center bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
                 onClick={() => {
                   dispatch(createPaymentLink({ names, totalAmount, items }));
-
+                  dispatch(createOrders({ items, email }));
                   // if (linkDetails) {
                   //   window.open(linkDetails.paymentLink.url);
                   //   // window.location.href = linkDetails.paymentLink.url;
