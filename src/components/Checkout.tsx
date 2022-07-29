@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   createPaymentLink,
   getCartTotal,
+  clearCart,
   remove,
 } from "../features/cart/cartSlice";
 // import { nanoid } from "nanoid";
@@ -109,6 +110,7 @@ export default function Checkout() {
                 onClick={() => {
                   dispatch(createPaymentLink({ names, totalAmount, items }));
                   dispatch(createOrders({ items, email }));
+                  dispatch(clearCart());
                   // if (linkDetails) {
                   //   window.open(linkDetails.paymentLink.url);
                   //   // window.location.href = linkDetails.paymentLink.url;

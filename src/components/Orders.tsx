@@ -90,7 +90,7 @@ function Orders() {
                       <h3 className="text-base font-medium text-gray-900">
                         <a href={item.image}>{item.title}</a>
                       </h3>
-                      <h3 className="text-base mt-2 font-medium text-gray-900">
+                      <h3 className="text-sm mt-2 font-normal text-gray-900">
                         <a href="#">Order ID: {`product_${item.id}`}</a>
                       </h3>
                       <p className="mt-2 text-sm font-medium text-gray-900">
