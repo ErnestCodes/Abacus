@@ -16,6 +16,7 @@ import FooterSection from "./FooterSection";
 import { Link } from "react-router-dom";
 import routes from "../routes";
 import NavHeader from "./NavHeader";
+import truncate from "../utils/truncate";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -33,14 +34,14 @@ function Orders() {
 
   useEffect(() => {
     dispatch(getAllProducts()) as any;
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadingUser()) as any;
-    }
+    // if (isSuccess || accessToken || refreshToken) {
+    dispatch(loadingUser()) as any;
+    // }
   }, [products, user, dispatch]);
 
-  if (orderSuccess) {
-    console.log(order);
-  }
+  // if (orderSuccess) {
+  //   console.log(order);
+  // }
 
   return (
     <div className="bg-white">
@@ -53,14 +54,14 @@ function Orders() {
         <div className="px-4 space-y-2 sm:px-0 sm:flex sm:items-baseline sm:justify-between sm:space-y-0">
           <div className="flex sm:items-baseline sm:space-x-4">
             <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-              Order #54879
+              Order
             </h1>
           </div>
           <p className="text-sm text-gray-600">
             Order placed{" "}
-            <time dateTime="2021-03-22" className="font-medium text-gray-900">
+            {/* <time dateTime="2021-03-22" className="font-medium text-gray-900">
               March 22, 2021
-            </time>
+            </time> */}
           </p>
         </div>
 
@@ -71,30 +72,32 @@ function Orders() {
           </h2>
 
           <div className="space-y-8">
-            {products.map((product) => (
+            {user.orders.map((item: any) => (
               <div
-                key={product.id}
+                key={item.id}
                 className="bg-white border-t border-b border-gray-200 shadow-sm sm:border sm:rounded-lg"
               >
                 <div className="py-6 px-4 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                   <div className="sm:flex lg:col-span-7">
                     <div className="flex-shrink-0 w-full aspect-w-1 aspect-h-1 rounded-lg overflow-hidden sm:aspect-none sm:w-40 sm:h-40">
                       <img
-                        src={product.imageSrc}
-                        alt={product.imageAlt}
-                        className="w-full h-full object-center object-cover sm:w-full sm:h-full"
+                        src={item.image}
+                        className="w-full h-full object-center object-contain sm:w-full sm:h-full"
                       />
                     </div>
 
                     <div className="mt-6 sm:mt-0 sm:ml-6">
                       <h3 className="text-base font-medium text-gray-900">
-                        <a href={product.href}>{product.name}</a>
+                        <a href={item.image}>{item.title}</a>
+                      </h3>
+                      <h3 className="text-base mt-2 font-medium text-gray-900">
+                        <a href="#">Order ID: {`product_${item.id}`}</a>
                       </h3>
                       <p className="mt-2 text-sm font-medium text-gray-900">
-                        ${product.price}
+                        ${parseInt(item.price + "00")}
                       </p>
                       <p className="mt-3 text-sm text-gray-500">
-                        {product.description}
+                        {truncate(item.description, 35)}
                       </p>
                     </div>
                   </div>

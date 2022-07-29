@@ -84,6 +84,11 @@ function NewProducts() {
     (state: any) => state.auth
   );
 
+  const onLogout = () => {
+    dispatch(logout({ accessToken, refreshToken }));
+    dispatch(reset());
+  };
+
   const { title, image, price, description, category } = formData;
   //   console.log(selectedFile);
   const navigate = useNavigate();
@@ -135,7 +140,7 @@ function NewProducts() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+              <div className="fixed inset-0 bg-black bg-opacity-75" />
             </Transition.Child>
 
             <div className="fixed inset-0 flex z-40">
@@ -148,7 +153,7 @@ function NewProducts() {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-cyan-700">
+                <Dialog.Panel className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-black">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-300"
@@ -174,13 +179,13 @@ function NewProducts() {
                   </Transition.Child>
                   <div className="flex-shrink-0 flex items-center px-4">
                     <img
-                      className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
+                      className="h-20 w-auto"
+                      src="https://abacus-47e6d.web.app/img/abacus223.png"
                       alt="admin"
                     />
                   </div>
                   <nav
-                    className="mt-5 flex-shrink-0 h-full divide-y divide-cyan-800 overflow-y-auto"
+                    className="mt-5 flex-shrink-0 h-full divide-y divide-white overflow-y-auto"
                     aria-label="Sidebar"
                   >
                     <div className="px-2 space-y-1">
@@ -190,14 +195,14 @@ function NewProducts() {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-cyan-800 text-white"
-                              : "text-cyan-100 hover:text-white hover:bg-cyan-600",
+                              ? "bg-gray-700 text-white"
+                              : "text-white hover:text-slate-200 hover:bg-gray-900",
                             "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                           )}
                           aria-current={item.current ? "page" : undefined}
                         >
                           <item.icon
-                            className="mr-4 flex-shrink-0 h-6 w-6 text-cyan-200"
+                            className="mr-4 flex-shrink-0 h-6 w-6 text-white"
                             aria-hidden="true"
                           />
                           {item.name}
@@ -210,10 +215,10 @@ function NewProducts() {
                           <a
                             key={item.name}
                             href={item.href}
-                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-white hover:text-white hover:bg-slate-200"
                           >
                             <item.icon
-                              className="mr-4 h-6 w-6 text-cyan-200"
+                              className="mr-4 h-6 w-6 text-white"
                               aria-hidden="true"
                             />
                             {item.name}
@@ -234,16 +239,16 @@ function NewProducts() {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex flex-col flex-grow bg-cyan-700 pt-5 pb-4 overflow-y-auto">
+          <div className="flex flex-col flex-grow bg-black pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
               <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
-                alt="Easywire logo"
+                className="h-20 w-auto"
+                src="https://abacus-47e6d.web.app/img/abacus223.png"
+                alt="logo"
               />
             </div>
             <nav
-              className="mt-5 flex-1 flex flex-col divide-y divide-cyan-800 overflow-y-auto"
+              className="mt-5 flex-1 flex flex-col divide-y divide-white overflow-y-auto"
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
@@ -253,14 +258,14 @@ function NewProducts() {
                     href={item.href}
                     className={classNames(
                       item.current
-                        ? "bg-cyan-800 text-white"
-                        : "text-cyan-100 hover:text-white hover:bg-cyan-600",
+                        ? "bg-gray-700 text-white"
+                        : "text-white hover:text-slate-200 hover:bg-gray-900",
                       "group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md"
                     )}
                     aria-current={item.current ? "page" : undefined}
                   >
                     <item.icon
-                      className="mr-4 flex-shrink-0 h-6 w-6 text-cyan-200"
+                      className="mr-4 flex-shrink-0 h-6 w-6 text-white"
                       aria-hidden="true"
                     />
                     {item.name}
@@ -273,10 +278,10 @@ function NewProducts() {
                     <a
                       key={item.name}
                       href={item.href}
-                      className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                      className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-white hover:text-white hover:bg-gray-900 "
                     >
                       <item.icon
-                        className="mr-4 h-6 w-6 text-cyan-200"
+                        className="mr-4 h-6 w-6 text-white"
                         aria-hidden="true"
                       />
                       {item.name}
@@ -389,8 +394,8 @@ function NewProducts() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            onClick={onLogOut}
                             href="#"
+                            onClick={onLogout}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
