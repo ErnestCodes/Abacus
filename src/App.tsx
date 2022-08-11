@@ -13,35 +13,23 @@ import HomeAdmin from "./components/Admin/Home/Home.admin";
 import Users from "./components/Admin/Layout/Users";
 import Products from "./components/Admin/Layout/Products";
 import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 import { injectStyle } from "react-toastify/dist/inject-style";
-// import setAuthToken from "./utils/setAuthToken";
-// import { AppDispatch, store } from "./app/store";
-// import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import NewProducts from "./components/Admin/Layout/NewProducts";
 import Orders from "./components/Orders";
 import Cart from "./components/Cart";
 import AuthError from "./components/AuthError";
-import { loadingUser } from "./features/user/userSlice";
 import RedirectPage from "./components/RedirectPage";
 import Toc from "./components/Toc";
 import Policy from "./components/Policy";
+import Login from "./components/Login/Login";
 
 injectStyle();
 
 function App() {
-  const queryParams = new URLSearchParams(window.location.search);
-  const data = queryParams.get("data") as any;
-  const detail = queryParams.get("detail") as any;
-  if (detail) {
-    localStorage.setItem("userRefresh", detail);
-  }
-
-  if (data) {
-    localStorage.setItem("userAccess", data);
-  }
-
+  // const queryParams = new URLSearchParams(window.location.search);
+  // const data = queryParams.get("data") as any;
+  // const detail = queryParams.get("detail") as any;
   const { isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.auth
   );
@@ -56,6 +44,7 @@ function App() {
       <Router>
         <Routes>
           <Route path={routes.home} element={<HomePage />} />
+          {/* <Route path={routes.login} element={<Login />} /> */}
           <Route path={routes.loginAdmin} element={<LoginAdmin />} />
           <Route path={routes.toc} element={<Toc />} />
           <Route path={routes.policy} element={<Policy />} />

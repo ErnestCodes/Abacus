@@ -3,7 +3,7 @@ import { products } from "../utils/data";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
-import { loadingUser } from "../features/user/userSlice";
+// import { loadingUser } from "../features/user/userSlice";
 import FooterSection from "./FooterSection";
 import NavHeader from "./NavHeader";
 import Checkout from "./Checkout";
@@ -20,9 +20,9 @@ function Cart() {
   useEffect(() => {
     dispatch(getAllProducts()) as any;
 
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadingUser()) as any;
-    }
+    // if (isSuccess || accessToken || refreshToken) {
+    //   dispatch(loadingUser()) as any;
+    // }
   }, [products, user, dispatch]);
 
   return (

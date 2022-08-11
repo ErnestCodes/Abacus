@@ -4,7 +4,6 @@ import { footerNavigation, favorites } from "../utils/data";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../app/store";
 import { getAllProducts } from "../features/products/productSlice";
-import { loadingUser } from "../features/user/userSlice";
 import { toast } from "react-toastify";
 import { setCart } from "../features/cart/cartSlice";
 import Header from "./Header";
@@ -18,9 +17,9 @@ function HomePage() {
   );
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(loadingUser()) as any;
-  }, []);
+  // useEffect(() => {
+  //   dispatch(loadingUser()) as any;
+  // }, []);
 
   useEffect(() => {
     dispatch(getAllProducts()) as any;
@@ -32,14 +31,13 @@ function HomePage() {
     id: string,
     title: string,
     description: string,
-    category: string,
-    user: object
+    category: string
   ) => {
     if (!user) {
       toast.error("Please sign up");
     }
 
-    dispatch(setCart({ image, price, id, title, description, category, user }));
+    dispatch(setCart({ image, price, id, title, description, category }));
 
     if (addSuccess) {
       toast.success("added to cart");
@@ -155,8 +153,7 @@ function HomePage() {
                                 nanoid(),
                                 product.title,
                                 product.description,
-                                product.category,
-                                user
+                                product.category
                               );
                             }}
                             className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
@@ -262,8 +259,7 @@ function HomePage() {
                                 nanoid(),
                                 product.title,
                                 product.description,
-                                product.category,
-                                user
+                                product.category
                               );
                             }}
                             className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"

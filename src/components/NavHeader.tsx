@@ -5,12 +5,19 @@ import {
   ShoppingBagIcon,
   XIcon,
 } from "@heroicons/react/outline";
+import {
+  GoogleAuthProvider,
+  OAuthCredential,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../firebase";
 import React, { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import routes from "../routes";
 import { navigation } from "../utils/data";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
+import { setUser, userError } from "../features/user/userSlice";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -21,6 +28,38 @@ function NavHeader() {
 
   const { user } = useSelector((state: any) => state.user);
   const { items } = useSelector((state: any) => state.cart);
+  const dispatch = useDispatch();
+  const provider = new GoogleAuthProvider();
+
+  const googleSignOn = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(
+          result
+        ) as OAuthCredential;
+        const token = credential.accessToken as any;
+
+        // The signed-in user info.
+        const user = result.user;
+        // ...
+        localStorage.setItem("userAccess", token);
+        localStorage.setItem("userRefresh", user.refreshToken);
+
+        dispatch(setUser(user));
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        dispatch(userError(errorMessage));
+      });
+  };
   return (
     <>
       {/* <Header /> */}
@@ -167,27 +206,27 @@ function NavHeader() {
                 {user ? (
                   <div className="flow-root">
                     <a className="-m-2 p-2 block font-medium text-gray-900">
-                      Hello, {user.name}
+                      Hello, {user && user.displayName}
                     </a>
                   </div>
                 ) : (
                   <>
                     <div className="flow-root">
-                      <a
-                        href={getGoogleOAuthURL()}
+                      <span
+                        onClick={googleSignOn}
                         className="-m-2 p-2 block font-medium text-gray-900"
                       >
-                        Sign in
-                      </a>
+                        SignIn with Google
+                      </span>
                     </div>
-                    <div className="flow-root">
+                    {/* <div className="flow-root">
                       <a
-                        href={getGoogleOAuthURL()}
+                        // href={getGoogleOAuthURL()}
                         className="-m-2 p-2 block font-medium text-gray-900"
                       >
                         Create account
                       </a>
-                    </div>
+                    </div> */}
                   </>
                 )}
               </div>
@@ -365,28 +404,28 @@ function NavHeader() {
                 {user ? (
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <a className="text-sm font-medium text-white hover:text-gray-200">
-                      Hello, {user && user.name}
+                      Hello, {user && user.displayName}
                     </a>
                   </div>
                 ) : (
                   <>
                     <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                      <a
-                        href={getGoogleOAuthURL()}
-                        className="text-sm font-medium text-white hover:text-gray-200"
+                      <span
+                        onClick={googleSignOn}
+                        className="text-sm cursor-pointer font-medium text-white hover:text-gray-200"
                       >
-                        Sign in
-                      </a>
+                        SignIn with Google
+                      </span>
                       <span
                         className="h-6 w-px bg-gray-200"
                         aria-hidden="true"
                       />
-                      <a
+                      {/* <a
                         href={getGoogleOAuthURL()}
                         className="text-sm font-medium text-white hover:text-gray-200"
                       >
                         Create account
-                      </a>
+                      </a> */}
                     </div>
                   </>
                 )}

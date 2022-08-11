@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createPaymentLink,
@@ -5,11 +6,11 @@ import {
   clearCart,
   remove,
 } from "../features/cart/cartSlice";
-// import { nanoid } from "nanoid";
-import React, { useEffect } from "react";
 import { AppDispatch } from "../app/store";
 import { Link } from "react-router-dom";
-import { createOrders } from "../features/orders/OrderSlice";
+import { addDoc, collection } from "firebase/firestore";
+// import { createOrders } from "../features/orders/OrderSlice";
+import { db } from "../firebase";
 
 export default function Checkout() {
   const { items, linkDetails } = useSelector((state: any) => state.cart);
@@ -107,10 +108,19 @@ export default function Checkout() {
                 // rel="noreferrer"
                 // target="_blank"
                 className="w-full text-center bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
-                onClick={() => {
-                  dispatch(createPaymentLink({ names, totalAmount, items }));
-                  dispatch(createOrders({ items, email }));
-                  dispatch(clearCart());
+                onClick={async () => {
+                  await addDoc(collection(db, "users", user.uid, "orders"), {
+                    basket: items,
+                    amount: totalAmount,
+                  }).then(async () => {
+                    await dispatch(
+                      createPaymentLink({ names, totalAmount, items })
+                    );
+
+                    dispatch(clearCart());
+                  });
+
+                  // dispatch(createOrders({ items, email }));
                   // if (linkDetails) {
                   //   window.open(linkDetails.paymentLink.url);
                   //   // window.location.href = linkDetails.paymentLink.url;
