@@ -8,7 +8,7 @@ const initialState: cartState = {
   totalAmount: 0,
   totalCount: 0,
   addSuccess: false,
-  linkDetails: [],
+  linkDetails: "",
   isLinkLoading: false,
   linkErrorMsg: "",
   isLinkError: false,

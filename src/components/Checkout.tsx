@@ -103,11 +103,10 @@ export default function Checkout() {
             </div>
 
             <div className="mt-10">
-              <Link
-                to="/payment"
+              <span
                 // rel="noreferrer"
                 // target="_blank"
-                className="w-full text-center bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
+                className="w-full text-center cursor-pointer bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
                 onClick={async () => {
                   await addDoc(collection(db, "users", user.uid, "orders"), {
                     basket: items,
@@ -117,7 +116,7 @@ export default function Checkout() {
                       createPaymentLink({ names, totalAmount, items })
                     );
 
-                    dispatch(clearCart());
+                    // dispatch(clearCart());
                   });
 
                   // dispatch(createOrders({ items, email }));
@@ -128,7 +127,7 @@ export default function Checkout() {
                 }}
               >
                 Checkout
-              </Link>
+              </span>
             </div>
           </section>
         </form>

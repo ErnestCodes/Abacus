@@ -16,7 +16,7 @@ export default function RedirectPage() {
     dispatch(createPaymentLink({ names, totalAmount, items }));
   }, []);
 
-  window.location.href = linkDetails.paymentLink.url;
+  window.location.href = linkDetails;
   // window.open(linkDetails.paymentLink.url);
 
   // Render some text when redirecting
