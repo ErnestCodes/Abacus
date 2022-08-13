@@ -20,9 +20,9 @@ export default function Checkout() {
   const names = [...items.map((item: any) => item.title)].toString();
   const dispatch = useDispatch<AppDispatch>();
 
-  // useEffect(() => {
-  //   dispatch(createPaymentLink({ totalAmount, names }));
-  // }, []);
+  useEffect(() => {
+    dispatch(createPaymentLink({ names, totalAmount, items }));
+  }, []);
 
   return (
     <div className="bg-white">
@@ -103,7 +103,8 @@ export default function Checkout() {
             </div>
 
             <div className="mt-10">
-              <span
+              <a
+                href={linkDetails ? linkDetails : ""}
                 // rel="noreferrer"
                 // target="_blank"
                 className="w-full text-center cursor-pointer bg-[#f0c14b] border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
@@ -112,11 +113,7 @@ export default function Checkout() {
                     basket: items,
                     amount: totalAmount,
                   }).then(async () => {
-                    await dispatch(
-                      createPaymentLink({ names, totalAmount, items })
-                    );
-
-                    // dispatch(clearCart());
+                    dispatch(clearCart());
                   });
 
                   // dispatch(createOrders({ items, email }));
@@ -127,7 +124,7 @@ export default function Checkout() {
                 }}
               >
                 Checkout
-              </span>
+              </a>
             </div>
           </section>
         </form>

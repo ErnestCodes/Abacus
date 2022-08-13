@@ -17,6 +17,8 @@ import {
   OAuthCredential,
   OAuthProvider,
   OAuthCredentialOptions,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import getGoogleOAuthURL from "../utils/getGoogleUrl";
 import { setUser, userError } from "../features/user/userSlice";
@@ -32,11 +34,14 @@ function Header() {
   const { items } = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
   const provider = new GoogleAuthProvider();
+  provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
 
-  const googleSignOn = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
+  const googleSignOn = async () => {
+    signInWithRedirect(auth, provider);
+
+    getRedirectResult(auth)
+      .then((result: any) => {
+        // This gives you a Google Access Token. You can use it to access Google APIs.
         const credential = GoogleAuthProvider.credentialFromResult(
           result
         ) as OAuthCredential;
@@ -44,14 +49,12 @@ function Header() {
 
         // The signed-in user info.
         const user = result.user;
-
-        // ...
         localStorage.setItem("userAccess", token);
         localStorage.setItem("userRefresh", user.refreshToken);
 
         dispatch(setUser(user));
       })
-      .catch((error) => {
+      .catch((error: any) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -62,6 +65,34 @@ function Header() {
         // ...
         dispatch(userError(errorMessage));
       });
+    // await signInWithPopup(auth, provider)
+    //   .then((result) => {
+    //     // This gives you a Google Access Token. You can use it to access the Google API.
+    //     const credential = GoogleAuthProvider.credentialFromResult(
+    //       result
+    //     ) as OAuthCredential;
+    //     const token = credential.accessToken as any;
+
+    //     // The signed-in user info.
+    //     const user = result.user;
+
+    //     // ...
+    //     localStorage.setItem("userAccess", token);
+    //     localStorage.setItem("userRefresh", user.refreshToken);
+
+    //     dispatch(setUser(user));
+    //   })
+    //   .catch((error) => {
+    //     // Handle Errors here.
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     // The email of the user's account used.
+    //     const email = error.customData.email;
+    //     // The AuthCredential type that was used.
+    //     const credential = GoogleAuthProvider.credentialFromError(error);
+    //     // ...
+    //     dispatch(userError(errorMessage));
+    //   });
   };
   return (
     <>
