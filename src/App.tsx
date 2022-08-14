@@ -23,6 +23,13 @@ import RedirectPage from "./components/RedirectPage";
 import Toc from "./components/Toc";
 import Policy from "./components/Policy";
 import Login from "./components/Login/Login";
+import {
+  getRedirectResult,
+  GoogleAuthProvider,
+  OAuthCredential,
+} from "firebase/auth";
+import { auth } from "./firebase";
+import { setUser, userError } from "./features/user/userSlice";
 
 injectStyle();
 
@@ -30,6 +37,36 @@ function App() {
   // const queryParams = new URLSearchParams(window.location.search);
   // const data = queryParams.get("data") as any;
   // const detail = queryParams.get("detail") as any;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result: any) => {
+        // This gives you a Google Access Token. You can use it to access Google APIs.
+        const credential = GoogleAuthProvider.credentialFromResult(
+          result
+        ) as OAuthCredential;
+        const token = credential.accessToken as any;
+
+        // The signed-in user info.
+        const user = result.user;
+        localStorage.setItem("userAccess", token);
+        localStorage.setItem("userRefresh", user.refreshToken);
+
+        dispatch(setUser(user));
+      })
+      .catch((error: any) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        dispatch(userError(errorMessage));
+      });
+  }, []);
+
   const { isSuccess, accessToken, refreshToken } = useSelector(
     (state: any) => state.auth
   );

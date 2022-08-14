@@ -5,7 +5,7 @@ import {
   ShoppingBagIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import routes from "../routes";
@@ -37,34 +37,8 @@ function Header() {
   provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
 
   const googleSignOn = async () => {
-    signInWithRedirect(auth, provider);
+    await signInWithRedirect(auth, provider);
 
-    getRedirectResult(auth)
-      .then((result: any) => {
-        // This gives you a Google Access Token. You can use it to access Google APIs.
-        const credential = GoogleAuthProvider.credentialFromResult(
-          result
-        ) as OAuthCredential;
-        const token = credential.accessToken as any;
-
-        // The signed-in user info.
-        const user = result.user;
-        localStorage.setItem("userAccess", token);
-        localStorage.setItem("userRefresh", user.refreshToken);
-
-        dispatch(setUser(user));
-      })
-      .catch((error: any) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-        dispatch(userError(errorMessage));
-      });
     // await signInWithPopup(auth, provider)
     //   .then((result) => {
     //     // This gives you a Google Access Token. You can use it to access the Google API.
@@ -94,6 +68,35 @@ function Header() {
     //     dispatch(userError(errorMessage));
     //   });
   };
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result: any) => {
+        // This gives you a Google Access Token. You can use it to access Google APIs.
+        const credential = GoogleAuthProvider.credentialFromResult(
+          result
+        ) as OAuthCredential;
+        const token = credential.accessToken as any;
+
+        // The signed-in user info.
+        const user = result.user;
+        localStorage.setItem("userAccess", token);
+        localStorage.setItem("userRefresh", user.refreshToken);
+
+        dispatch(setUser(user));
+      })
+      .catch((error: any) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        dispatch(userError(errorMessage));
+      });
+  }, []);
   return (
     <>
       {/* <Header /> */}
