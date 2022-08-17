@@ -343,7 +343,7 @@ function HomePage() {
               </div>
               <div className="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
                 <img
-                  src="https://images.unsplash.com/photo-1656078411660-05f2cf994d33?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                  src="https://images.unsplash.com/photo-1616640045164-deb3b104c4b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
                   alt="Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters."
                   className="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full"
                 />
@@ -356,7 +356,7 @@ function HomePage() {
                     <h3 className="font-semibold text-white">
                       <a href="#">
                         <span className="absolute inset-0" />
-                        Accessories
+                        Cologne
                       </a>
                     </h3>
                     <p aria-hidden="true" className="mt-1 text-sm text-white">
@@ -402,53 +402,107 @@ function HomePage() {
           </div>
         </section>
 
-        {/* Favorites section */}
-        <section aria-labelledby="favorites-heading">
-          <div className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:items-baseline sm:justify-between">
+        {/* Trending cologne */}
+        <section aria-labelledby="trending-heading" className="bg-white">
+          <div className="py-16 sm:py-24 lg:max-w-7xl lg:mx-auto lg:py-10 lg:px-8">
+            <div className="px-4 flex items-center justify-between sm:px-6 lg:px-0">
               <h2
-                id="favorites-heading"
+                id="trending-heading"
                 className="text-2xl font-extrabold tracking-tight text-gray-900"
               >
-                Our Favorites
+                Trending cologne
               </h2>
-              <a
+              {/* <a
                 href="#"
-                className="hidden text-sm font-semibold text-[#f0c14b] sm:block"
+                className="hidden sm:block text-sm font-semibold text-[#f0c14b]"
               >
-                Browse all favorites<span aria-hidden="true"> &rarr;</span>
-              </a>
+                See everything<span aria-hidden="true"> &rarr;</span>
+              </a> */}
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-y-0 sm:gap-x-6 lg:gap-x-8">
-              {favorites.map((favorite) => (
-                <div key={favorite.id} className="group relative">
-                  <div className="w-full h-96 rounded-lg overflow-hidden group-hover:opacity-75 sm:h-auto sm:aspect-w-2 sm:aspect-h-3">
-                    <img
-                      src={favorite.imageSrc}
-                      alt={favorite.imageAlt}
-                      className="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-gray-900">
-                    <a href={favorite.href}>
-                      <span className="absolute inset-0" />
-                      {favorite.name}
-                    </a>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{favorite.price}</p>
-                </div>
-              ))}
+            <div className="mt-8 relative">
+              <div className="relative w-full overflow-x-auto">
+                <ul
+                  role="list"
+                  className="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-x-8"
+                >
+                  {products &&
+                    products
+                      .filter((product: any) => product.category == "Cologne")
+                      .map((product: any) => (
+                        <li
+                          key={product._id}
+                          className="w-64 inline-flex flex-col text-center lg:w-auto"
+                        >
+                          <div className="group relative">
+                            <div className="w-full bg-gray-200 rounded-md overflow-hidden aspect-w-1 aspect-h-1">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                className="w-full h-full object-center object-cover group-hover:opacity-75"
+                              />
+                            </div>
+                            <div className="mt-6">
+                              {/* <p className="text-sm text-gray-500">
+                            {product.color}
+                          </p> */}
+                              <h3 className="mt-1 font-semibold text-gray-900">
+                                <a href={product.href}>
+                                  <span className="absolute inset-0" />
+                                  {product.title}
+                                </a>
+                              </h3>
+                              <p className="mt-1 text-gray-900">
+                                ${product.price}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart(
+                                product.image,
+                                product.price,
+                                nanoid(),
+                                product.title,
+                                product.description,
+                                product.category
+                              );
+                            }}
+                            className="focus:outline-none mt-3 font-semibold justify-center text-white text-sm py-2.5 px-5 rounded-md bg-[#f0c14b] hover:bg-[#a88734] hover:shadow-lg flex items-center"
+                          >
+                            Add
+                          </button>
+                          {/* <h4 className="sr-only">Available colors</h4>
+                      <ul
+                        role="list"
+                        className="mt-auto pt-6 flex items-center justify-center space-x-3"
+                      >
+                        {product.availableColors.map((color) => (
+                          <li
+                            key={color.name}
+                            className="w-4 h-4 rounded-full border border-black border-opacity-10"
+                            style={{ backgroundColor: color.colorBg }}
+                          >
+                            <span className="sr-only">{color.name}</span>
+                          </li>
+                        ))}
+                      </ul> */}
+                        </li>
+                      ))}
+                </ul>
+              </div>
             </div>
 
-            <div className="mt-6 sm:hidden">
+            {/* <div className="mt-12 px-4 sm:hidden">
               <a
                 href="#"
-                className="block text-sm font-semibold text-[#f0c14b]"
+                className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
               >
-                Browse all favorites<span aria-hidden="true"> &rarr;</span>
+                See everything<span aria-hidden="true"> &rarr;</span>
               </a>
-            </div>
+            </div> */}
           </div>
         </section>
 
