@@ -27,7 +27,13 @@ import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../../features/products/productSlice";
 import { toast } from "react-toastify";
 import { AppDispatch } from "../../../app/store";
-import { logout, reset } from "../../../features/auth/authSlice";
+import {
+  loadUser,
+  logout,
+  reset,
+  signOut,
+} from "../../../features/auth/authSlice";
+import Spinner from "../../Spinner";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -79,20 +85,45 @@ function NewProducts() {
     image: "",
   });
 
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { user, accessToken, refreshToken } = useSelector(
-    (state: any) => state.auth
-  );
+  const {
+    user,
+    accessToken,
+    refreshToken,
+    isSuccess,
+    message,
+    isError,
+    isLoading,
+  } = useSelector((state: any) => state.auth);
+  const { isProductSuccess } = useSelector((state: any) => state.product);
 
-  const onLogout = () => {
-    dispatch(logout({ accessToken, refreshToken }));
-    dispatch(reset());
-  };
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    if (!accessToken) {
+      navigate("/login");
+    }
+
+    dispatch(loadUser({ accessToken, refreshToken }));
+
+    return () => {
+      dispatch(reset());
+    };
+  }, [
+    isError,
+    isSuccess,
+    message,
+    accessToken,
+    refreshToken,
+    navigate,
+    dispatch,
+  ]);
 
   const { title, image, price, description, category } = formData;
   //   console.log(selectedFile);
-  const navigate = useNavigate();
-  const { isProductSuccess } = useSelector((state: any) => state.product);
 
   const onChange = (e: any) => {
     setFormData((prevState) => ({
@@ -116,10 +147,10 @@ function NewProducts() {
     toast.success("Uploaded successful");
   };
 
-  const onLogOut = () => {
-    dispatch(logout({ accessToken, refreshToken }));
+  const onLogout = () => {
+    dispatch(signOut());
     dispatch(reset());
-    // navigate("/");
+    navigate("/login");
   };
 
   return (
@@ -342,7 +373,7 @@ function NewProducts() {
                     <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://media-exp2.licdn.com/dms/image/C5603AQFOzf-J5TjZZw/profile-displayphoto-shrink_800_800/0/1576698577856?e=1661385600&v=beta&t=woxwqq_JFuaGyc-hQtX0DLy7qgS-S5aWGpeV6q6cddY"
+                        src="https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg"
                         alt=""
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
@@ -393,16 +424,18 @@ function NewProducts() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            onClick={onLogout}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              onLogout();
+                            }}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
                             Logout
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>

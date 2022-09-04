@@ -82,6 +82,10 @@ export const logout = createAsyncThunk(
   }
 );
 
+export const signOut = createAsyncThunk("auth/signOut", async () => {
+  await authService.signOut();
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -128,6 +132,11 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        state.user = null;
+      })
+      .addCase(signOut.fulfilled, (state) => {
+        state.accessToken = null;
+        state.refreshToken = null;
         state.user = null;
       });
   },

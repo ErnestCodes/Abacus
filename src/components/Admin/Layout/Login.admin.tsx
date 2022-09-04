@@ -2,9 +2,10 @@ import { LockClosedIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { loadUser, login, reset } from "../../../features/auth/authSlice";
 import axios from "axios";
+import Spinner from "../../Spinner";
 
 export default function LoginAdmin() {
   const [formData, setFormData] = useState({
@@ -32,14 +33,12 @@ export default function LoginAdmin() {
       toast.error(message);
     }
 
-    if (isSuccess || user) {
-      dispatch(loadUser({ accessToken, refreshToken }) as any);
-      // dispatch(loadUser(user) as any);
-      navigate("/admin_$303248732/dashboard");
+    if (accessToken) {
+      navigate("/dashboard");
     }
 
     dispatch(reset());
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
+  }, [isSuccess, isError, message, navigate, dispatch]);
 
   const onChange = (e: any) => {
     setFormData((prevState) => ({
@@ -58,6 +57,10 @@ export default function LoginAdmin() {
 
     dispatch(login(userData) as any);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

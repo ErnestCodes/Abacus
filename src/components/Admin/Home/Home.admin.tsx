@@ -27,9 +27,15 @@ import {
 import routes from "../../../routes";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loadUser, logout, reset } from "../../../features/auth/authSlice";
+import {
+  loadUser,
+  logout,
+  reset,
+  signOut,
+} from "../../../features/auth/authSlice";
 import { AppDispatch } from "../../../app/store";
 import { toast } from "react-toastify";
+import Spinner from "../../Spinner";
 
 const navigation = [
   { name: "Home", href: "#", icon: HomeIcon, current: true },
@@ -73,11 +79,15 @@ export default function HomeAdmin() {
       toast.error(message);
     }
 
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadUser({ accessToken, refreshToken }) as any);
+    if (!accessToken) {
+      navigate("/login");
     }
 
-    // dispatch(reset());
+    dispatch(loadUser({ accessToken, refreshToken }));
+
+    return () => {
+      dispatch(reset());
+    };
   }, [
     isError,
     isSuccess,
@@ -89,8 +99,9 @@ export default function HomeAdmin() {
   ]);
 
   const onLogout = () => {
-    dispatch(logout({ accessToken, refreshToken }));
+    dispatch(signOut());
     dispatch(reset());
+    navigate("/login");
   };
 
   return (
@@ -313,11 +324,13 @@ export default function HomeAdmin() {
                     <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://media-exp2.licdn.com/dms/image/C5603AQFOzf-J5TjZZw/profile-displayphoto-shrink_800_800/0/1576698577856?e=1661385600&v=beta&t=woxwqq_JFuaGyc-hQtX0DLy7qgS-S5aWGpeV6q6cddY"
+                        // https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg
+                        src="https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg"
                         alt=""
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                         <span className="sr-only">Open user menu for </span>
+                        {/* Izuchukwu Onukwube */}
                         {user && user.name}
                       </span>
                       <ChevronDownIcon
@@ -364,16 +377,18 @@ export default function HomeAdmin() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            onClick={onLogout}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              onLogout();
+                            }}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
                             Logout
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>
@@ -392,18 +407,18 @@ export default function HomeAdmin() {
                     <div className="flex items-center">
                       <img
                         className="hidden h-16 w-16 rounded-full sm:block"
-                        src="https://media-exp2.licdn.com/dms/image/C5603AQFOzf-J5TjZZw/profile-displayphoto-shrink_800_800/0/1576698577856?e=1661385600&v=beta&t=woxwqq_JFuaGyc-hQtX0DLy7qgS-S5aWGpeV6q6cddY"
+                        src="https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg"
                         alt=""
                       />
                       <div>
                         <div className="flex items-center">
                           <img
                             className="h-16 w-16 rounded-full sm:hidden"
-                            src="https://media-exp2.licdn.com/dms/image/C5603AQFOzf-J5TjZZw/profile-displayphoto-shrink_800_800/0/1576698577856?e=1661385600&v=beta&t=woxwqq_JFuaGyc-hQtX0DLy7qgS-S5aWGpeV6q6cddY"
+                            src="https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg"
                             alt=""
                           />
                           <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                            Good morning, {user && user.name}
+                            Good day, {user && user.name}
                           </h1>
                         </div>
                         <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">

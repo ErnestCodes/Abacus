@@ -59,7 +59,7 @@ function App() {
         const errorCode = error.code;
         const errorMessage = error.message;
         // The email of the user's account used.
-        const email = error.customData.email;
+        const email = error.customData?.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
@@ -93,23 +93,12 @@ function App() {
             path={routes.cart}
             element={user ? <Cart /> : <Navigate to="/" />}
           />
-          <Route
-            path={routes.dashboard}
-            element={accessToken ? <HomeAdmin /> : <Navigate to="/" />}
-          />
-          <Route
-            path={routes.new}
-            element={accessToken ? <NewProducts /> : <Navigate to="/" />}
-          />
+          {/* Admin */}
+          <Route path={routes.dashboard} element={<HomeAdmin />} />
+          <Route path={routes.new} element={<NewProducts />} />
           <Route path="/payment" element={<RedirectPage />} />
-          <Route
-            path={routes.users}
-            element={accessToken ? <Users /> : <Navigate to="/" />}
-          />
-          <Route
-            path={routes.products}
-            element={accessToken ? <Products /> : <Navigate to="/" />}
-          />
+          <Route path={routes.users} element={<Users />} />
+          <Route path={routes.products} element={<Products />} />
           <Route path={routes.authError} element={<AuthError />} />
         </Routes>
       </Router>

@@ -22,7 +22,12 @@ import {
   SearchIcon,
 } from "@heroicons/react/solid";
 import routes from "../../../routes";
-import { loadUser, logout, reset } from "../../../features/auth/authSlice";
+import {
+  loadUser,
+  logout,
+  reset,
+  signOut,
+} from "../../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../app/store";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +39,7 @@ import {
   productReset,
 } from "../../../features/products/productSlice";
 import truncate from "../../../utils/truncate";
+import Spinner from "../../Spinner";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -79,15 +85,8 @@ export default function Products() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { products } = useSelector((state: any) => state.product);
 
-  const {
-    user,
-    isLoading,
-    accessToken,
-    refreshToken,
-    isError,
-    isSuccess,
-    message,
-  } = useSelector((state: any) => state.auth);
+  const { user, accessToken, refreshToken, isError, isSuccess, message } =
+    useSelector((state: any) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -104,16 +103,29 @@ export default function Products() {
       toast.error(message);
     }
 
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadUser({ accessToken, refreshToken }) as any);
+    if (!accessToken) {
+      navigate("/login");
     }
 
-    dispatch(reset());
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
+    dispatch(loadUser({ accessToken, refreshToken }));
+
+    return () => {
+      dispatch(reset());
+    };
+  }, [
+    isError,
+    isSuccess,
+    message,
+    accessToken,
+    refreshToken,
+    navigate,
+    dispatch,
+  ]);
 
   const onLogout = () => {
-    dispatch(logout({ accessToken, refreshToken }));
+    dispatch(signOut());
     dispatch(reset());
+    navigate("/login");
   };
 
   return (
@@ -336,7 +348,7 @@ export default function Products() {
                     <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://media-exp2.licdn.com/dms/image/C5603AQFOzf-J5TjZZw/profile-displayphoto-shrink_800_800/0/1576698577856?e=1661385600&v=beta&t=woxwqq_JFuaGyc-hQtX0DLy7qgS-S5aWGpeV6q6cddY"
+                        src="https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg"
                         alt=""
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
@@ -374,29 +386,31 @@ export default function Products() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
+                          <button
                             onClick={onLogout}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
+                            Settings
+                          </button>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              onLogout();
+                            }}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
                             Logout
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>

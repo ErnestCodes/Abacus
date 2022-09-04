@@ -60,11 +60,19 @@ const logout = async (accessToken: any, refreshToken: any) => {
   }
 };
 
+// Logout user
+const signOut = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("user");
+};
+
 const authService = {
   // register,
   loadUser,
   logout,
   login,
+  signOut,
 };
 
 export default authService;

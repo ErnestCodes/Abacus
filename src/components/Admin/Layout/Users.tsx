@@ -23,8 +23,11 @@ import {
 } from "@heroicons/react/solid";
 import routes from "../../../routes";
 import { useDispatch, useSelector } from "react-redux";
-import { loadUser } from "../../../features/auth/authSlice";
+import { loadUser, reset, signOut } from "../../../features/auth/authSlice";
 import { toast } from "react-toastify";
+import Spinner from "../../Spinner";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../../app/store";
 
 const navigation = [
   { name: "Home", href: routes.dashboard, icon: HomeIcon, current: false },
@@ -72,22 +75,48 @@ function classNames(...classes: string[]) {
 export default function Users() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { user, isError, isSuccess, accessToken, refreshToken, message } =
-    useSelector((state: any) => state.auth);
+  const {
+    user,
+    isError,
+    isSuccess,
+    accessToken,
+    isLoading,
+    refreshToken,
+    message,
+  } = useSelector((state: any) => state.auth);
 
   useEffect(() => {
     if (isError) {
       toast.error(message);
     }
 
-    if (isSuccess || accessToken || refreshToken) {
-      dispatch(loadUser({ accessToken, refreshToken }) as any);
+    if (!accessToken) {
+      navigate("/login");
     }
 
-    // dispatch(reset());
-  }, [isError, isSuccess, message, accessToken, refreshToken, dispatch]);
+    dispatch(loadUser({ accessToken, refreshToken }));
+
+    return () => {
+      dispatch(reset());
+    };
+  }, [
+    isError,
+    isSuccess,
+    message,
+    accessToken,
+    refreshToken,
+    navigate,
+    dispatch,
+  ]);
+
+  const onLogout = () => {
+    dispatch(signOut());
+    dispatch(reset());
+    navigate("/login");
+  };
 
   return (
     <>
@@ -309,7 +338,7 @@ export default function Users() {
                     <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://media-exp2.licdn.com/dms/image/C5603AQFOzf-J5TjZZw/profile-displayphoto-shrink_800_800/0/1576698577856?e=1661385600&v=beta&t=woxwqq_JFuaGyc-hQtX0DLy7qgS-S5aWGpeV6q6cddY"
+                        src="https://nnaemeka-f1184.web.app/images/emeksthecreator1.jpg"
                         alt=""
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
@@ -360,16 +389,18 @@ export default function Users() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            // onClick={onLogout}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              onLogout();
+                            }}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
                             Logout
-                          </a>
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>
